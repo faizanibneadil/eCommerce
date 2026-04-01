@@ -36,5 +36,17 @@
     "editor.codeActionsOnSave": {
       "source.fixAll.eslint": "explicit"
     }
+  },
+  "mcp.servers": {
+    "Payload": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-remote",
+        "http://127.0.0.1:3000/api/mcp",
+        "--header",
+        "Authorization: Bearer 4356e69f-3515-458b-a4d3-6b91fac3c32a"
+      ]
+    }
   }
 }

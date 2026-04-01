@@ -132,7 +132,17 @@ export const ProductsCollection: CollectionOverride = ({ defaultCollection }) =>
                         {
                             name: 'layout',
                             type: 'blocks',
-                            blocks: [],
+                            blocks: [
+                                {
+                                    slug: 'testBlock',
+                                    fields: [
+                                        {
+                                            type: 'text',
+                                            name: 'test'
+                                        }
+                                    ]
+                                }
+                            ],
                         },
                     ],
                     label: 'Content',

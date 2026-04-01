@@ -1,5 +1,6 @@
 import { formBuilderPlugin } from '@payloadcms/plugin-form-builder'
 import { seoPlugin } from '@payloadcms/plugin-seo'
+import { mcpPlugin } from "@payloadcms/plugin-mcp"
 import { Plugin } from 'payload'
 import { GenerateTitle, GenerateURL } from '@payloadcms/plugin-seo/types'
 import { FixedToolbarFeature, HeadingFeature, lexicalEditor } from '@payloadcms/richtext-lexical'
@@ -127,5 +128,46 @@ export const plugins: Plugin[] = [
         products: {
             productsCollectionOverride: ProductsCollection,
         },
+    }),
+    mcpPlugin({
+        collections: {
+            pages: {
+                enabled: true,
+                description: 'This is pages collection.',
+            },
+            forms: {
+                enabled: true,
+                description: 'This form collection. this collection contain a lot of form.',
+            },
+            products: {
+                enabled: true,
+                description: 'This is products Collection'
+            },
+            categories: {
+                enabled: true,
+                description: 'this is categories collection',
+            },
+            variantOptions: {
+                enabled: true,
+                description: 'this is variants options collection this collection will connected with projects collection when you will create a product with variants'
+            },
+            variants: {
+                enabled: true,
+                description: 'this is actual variants collection, this collection will contain all the products variants'
+            },
+            variantTypes: {
+                enabled: true,
+                description: 'this is variants types collection. this collection is connected with products collection and this collection will help you when you creating a product that has variants.'
+            }
+        },
+        userCollection: 'users',
+        mcp: {
+            serverOptions: {
+                serverInfo: {
+                    name: 'eCommerce MCP',
+                    version: '1.0.0'
+                }
+            }
+        }
     }),
 ]

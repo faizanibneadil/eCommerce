@@ -70,7 +70,12 @@ export const Pages: CollectionConfig = {
             type: 'tabs',
             tabs: [
                 {
-                    fields: [],
+                    fields: [
+                        {
+                            type: 'text',
+                            name: 'anyone'
+                        }
+                    ],
                     label: 'Content',
                 },
                 {
