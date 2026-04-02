@@ -37,7 +37,7 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: path.resolve(dirname),
   },
-  cacheComponents: true
+  // cacheComponents: true
 }
 
 export default withPayload(nextConfig)

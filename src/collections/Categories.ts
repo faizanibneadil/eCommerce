@@ -21,6 +21,22 @@ export const Categories: CollectionConfig = {
             type: 'text',
             required: true,
         },
+        {
+            type: 'upload',
+            relationTo: 'media',
+            name: 'image',
+            label: 'Category image'
+        },
+        {
+            type: 'join',
+            collection: 'products',
+            name: 'products',
+            on: 'categories',
+            admin: {
+                description: 'Related Products.',
+                disableBulkEdit: undefined
+            }
+        },
         slugField({
             position: undefined,
         }),

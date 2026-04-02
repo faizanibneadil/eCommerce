@@ -5,6 +5,7 @@ import { Plugin } from 'payload'
 import { GenerateTitle, GenerateURL } from '@payloadcms/plugin-seo/types'
 import { FixedToolbarFeature, HeadingFeature, lexicalEditor } from '@payloadcms/richtext-lexical'
 import { ecommercePlugin } from '@payloadcms/plugin-ecommerce'
+import { s3Storage } from '@payloadcms/storage-s3'
 
 // import { stripeAdapter } from '@payloadcms/plugin-ecommerce/payments/stripe'
 
@@ -28,6 +29,22 @@ const generateURL: GenerateURL<Product | Page> = ({ doc }) => {
 }
 
 export const plugins: Plugin[] = [
+    s3Storage({
+        enabled: true,
+        collections: {
+            media: true
+        },
+        bucket: process.env.S3_BUCKET!,
+        config: {
+            forcePathStyle: true, // Important for using Supabase
+            credentials: {
+                accessKeyId: process.env.S3_ACCESS_KEY_ID!,
+                secretAccessKey: process.env.S3_SECRET_ACCESS_KEY!,
+            },
+            region: process.env.S3_REGION,
+            endpoint: process.env.S3_ENDPOINT,
+        },
+    }),
     seoPlugin({
         generateTitle,
         generateURL,
@@ -85,6 +102,17 @@ export const plugins: Plugin[] = [
             isAdmin,
             isDocumentOwner,
         },
+        currencies: {
+            defaultCurrency: 'PKR',
+            supportedCurrencies: [
+                {
+                    code: 'PKR',
+                    label: 'Pakistani Rupees',
+                    symbol: '₨',
+                    decimals: 2
+                }
+            ]
+        },
         customers: {
             slug: 'users',
         },
@@ -129,45 +157,45 @@ export const plugins: Plugin[] = [
             productsCollectionOverride: ProductsCollection,
         },
     }),
-    mcpPlugin({
-        collections: {
-            pages: {
-                enabled: true,
-                description: 'This is pages collection.',
-            },
-            forms: {
-                enabled: true,
-                description: 'This form collection. this collection contain a lot of form.',
-            },
-            products: {
-                enabled: true,
-                description: 'This is products Collection'
-            },
-            categories: {
-                enabled: true,
-                description: 'this is categories collection',
-            },
-            variantOptions: {
-                enabled: true,
-                description: 'this is variants options collection this collection will connected with projects collection when you will create a product with variants'
-            },
-            variants: {
-                enabled: true,
-                description: 'this is actual variants collection, this collection will contain all the products variants'
-            },
-            variantTypes: {
-                enabled: true,
-                description: 'this is variants types collection. this collection is connected with products collection and this collection will help you when you creating a product that has variants.'
-            }
-        },
-        userCollection: 'users',
-        mcp: {
-            serverOptions: {
-                serverInfo: {
-                    name: 'eCommerce MCP',
-                    version: '1.0.0'
-                }
-            }
-        }
-    }),
+    // mcpPlugin({
+    //     collections: {
+    //         pages: {
+    //             enabled: true,
+    //             description: 'This is pages collection.',
+    //         },
+    //         forms: {
+    //             enabled: true,
+    //             description: 'This form collection. this collection contain a lot of form.',
+    //         },
+    //         products: {
+    //             enabled: true,
+    //             description: 'This is products Collection'
+    //         },
+    //         categories: {
+    //             enabled: true,
+    //             description: 'this is categories collection',
+    //         },
+    //         variantOptions: {
+    //             enabled: true,
+    //             description: 'this is variants options collection this collection will connected with projects collection when you will create a product with variants'
+    //         },
+    //         variants: {
+    //             enabled: true,
+    //             description: 'this is actual variants collection, this collection will contain all the products variants'
+    //         },
+    //         variantTypes: {
+    //             enabled: true,
+    //             description: 'this is variants types collection. this collection is connected with products collection and this collection will help you when you creating a product that has variants.'
+    //         }
+    //     },
+    //     userCollection: 'users',
+    //     mcp: {
+    //         serverOptions: {
+    //             serverInfo: {
+    //                 name: 'eCommerce MCP',
+    //                 version: '1.0.0'
+    //             }
+    //         }
+    //     }
+    // }),
 ]

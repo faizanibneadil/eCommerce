@@ -41,6 +41,9 @@ export const Media: CollectionConfig = {
     },
   ],
   upload: {
-    staticDir: path.resolve(dirname, '../../public/media'),
+    formatOptions: {
+      format: 'webp',
+    },
+    mimeTypes: ['image/*'],
   },
 }
