@@ -47,30 +47,53 @@ export const Pages: CollectionConfig = {
             required: true,
         },
         {
-            name: 'publishedOn',
-            type: 'date',
+            type: 'checkbox',
+            name: 'enableCollection',
+            label: 'Enable Collection',
             admin: {
-                date: {
-                    pickerAppearance: 'dayAndTime',
-                },
                 position: 'sidebar',
+                description: 'If you want to show your collections like: Products, Categories etc then you have to change collection.',
             },
-            hooks: {
-                beforeChange: [
-                    ({ siblingData, value }) => {
-                        if (siblingData._status === 'published' && !value) {
-                            return new Date()
-                        }
-                        return value
-                    },
-                ],
-            },
+            required: true,
+            defaultValue: false
         },
         {
             type: 'tabs',
             tabs: [
                 {
-                    fields: [],
+                    fields: [
+                        {
+                            type: 'text',
+                            name: 'configuredCollectionSlug',
+                            admin: {
+                                condition: ({ enableCollection }) => Boolean(enableCollection) === true,
+                                components: {
+                                    Field: {
+                                        path: '@/collections/Pages/components/ConfiguredCollectionSlug.tsx',
+                                        exportName: 'ConfiguredCollectionSlug',
+                                        clientProps: {
+                                            options: [
+                                                { label: 'Categories', value: 'categories' },
+                                                { label: 'Products', value: 'products' }
+                                            ]
+                                        }
+                                    }
+                                },
+                            },
+                        },
+                        {
+                            type: 'blocks',
+                            name: 'layout',
+                            label: 'Design You\'r Page',
+                            blocks: [],
+                            maxRows: 50,
+                            blockReferences: ['products-blocks', 'categories-blocks', 'carousel-block'],
+                            admin: {
+                                initCollapsed: true,
+                                condition: ({ enableCollection }) => Boolean(enableCollection) === false,
+                            }
+                        },
+                    ],
                     label: 'Content',
                 },
                 {

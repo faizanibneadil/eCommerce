@@ -1,7 +1,6 @@
 import type { GlobalConfig } from 'payload'
 
 import { adminOnly } from '@/access/adminOnly'
-import { link } from '@/fields/link'
 
 export const Header: GlobalConfig = {
     slug: 'header',
@@ -11,14 +10,10 @@ export const Header: GlobalConfig = {
     },
     fields: [
         {
-            name: 'navItems',
-            type: 'array',
-            fields: [
-                link({
-                    appearances: false,
-                }),
-            ],
-            maxRows: 6,
+            type: 'relationship',
+            relationTo: 'menus',
+            name: 'mainMenu',
+            label: 'Main Menu'
         },
     ],
 }

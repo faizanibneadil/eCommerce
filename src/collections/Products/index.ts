@@ -21,6 +21,7 @@ export const ProductsCollection: CollectionOverride = ({ defaultCollection }) =>
     ...defaultCollection,
     admin: {
         ...defaultCollection?.admin,
+        description: 'Products Collection.',
         defaultColumns: ['title', 'enableVariants', '_status', 'variants.variants'],
         livePreview: {
             url: ({ data, req }) =>
@@ -132,7 +133,17 @@ export const ProductsCollection: CollectionOverride = ({ defaultCollection }) =>
                         {
                             name: 'layout',
                             type: 'blocks',
-                            blocks: [],
+                            blocks: [
+                                {
+                                    slug: 'testBlock',
+                                    fields: [
+                                        {
+                                            type: 'text',
+                                            name: 'test'
+                                        }
+                                    ]
+                                }
+                            ],
                         },
                     ],
                     label: 'Content',

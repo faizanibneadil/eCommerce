@@ -70,12 +70,17 @@ export interface Config {
   auth: {
     users: UserAuthOperations;
   };
-  blocks: {};
+  blocks: {
+    'products-blocks': ProductsBlocks;
+    'categories-blocks': CategoriesBlocks;
+    'carousel-block': CarouselBlock;
+  };
   collections: {
     users: User;
     pages: Page;
     categories: Category;
     media: Media;
+    menus: Menu;
     forms: Form;
     'form-submissions': FormSubmission;
     addresses: Address;
@@ -97,6 +102,9 @@ export interface Config {
       cart: 'carts';
       addresses: 'addresses';
     };
+    categories: {
+      products: 'products';
+    };
     variantTypes: {
       options: 'variantOptions';
     };
@@ -109,6 +117,7 @@ export interface Config {
     pages: PagesSelect<false> | PagesSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    menus: MenusSelect<false> | MenusSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
     addresses: AddressesSelect<false> | AddressesSelect<true>;
@@ -131,10 +140,12 @@ export interface Config {
   globals: {
     header: Header;
     footer: Footer;
+    settings: Setting;
   };
   globalsSelect: {
     header: HeaderSelect<false> | HeaderSelect<true>;
     footer: FooterSelect<false> | FooterSelect<true>;
+    settings: SettingsSelect<false> | SettingsSelect<true>;
   };
   locale: null;
   widgets: {
@@ -182,84 +193,23 @@ export interface UserAuthOperations {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users".
+ * via the `definition` "products-blocks".
  */
-export interface User {
-  id: number;
-  name?: string | null;
-  roles?: ('admin' | 'customer')[] | null;
-  orders?: {
-    docs?: (number | Order)[];
-    hasNextPage?: boolean;
-    totalDocs?: number;
-  };
-  cart?: {
-    docs?: (number | Cart)[];
-    hasNextPage?: boolean;
-    totalDocs?: number;
-  };
-  addresses?: {
-    docs?: (number | Address)[];
-    hasNextPage?: boolean;
-    totalDocs?: number;
-  };
-  updatedAt: string;
-  createdAt: string;
-  email: string;
-  resetPasswordToken?: string | null;
-  resetPasswordExpiration?: string | null;
-  salt?: string | null;
-  hash?: string | null;
-  loginAttempts?: number | null;
-  lockUntil?: string | null;
-  sessions?:
-    | {
-        id: string;
-        createdAt?: string | null;
-        expiresAt: string;
-      }[]
-    | null;
-  password?: string | null;
-  collection: 'users';
+export interface ProductsBlocks {
+  label?: string | null;
+  enableSlides?: boolean | null;
+  enableSpecificProducts?: boolean | null;
+  /**
+   * Select Which Products should show in this section.
+   */
+  products?: (number | Product)[] | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'products-blocks';
 }
 /**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "orders".
- */
-export interface Order {
-  id: number;
-  items?:
-    | {
-        product?: (number | null) | Product;
-        variant?: (number | null) | Variant;
-        quantity: number;
-        id?: string | null;
-      }[]
-    | null;
-  shippingAddress?: {
-    title?: string | null;
-    firstName?: string | null;
-    lastName?: string | null;
-    company?: string | null;
-    addressLine1?: string | null;
-    addressLine2?: string | null;
-    city?: string | null;
-    state?: string | null;
-    postalCode?: string | null;
-    country?: string | null;
-    phone?: string | null;
-  };
-  customer?: (number | null) | User;
-  customerEmail?: string | null;
-  transactions?: (number | Transaction)[] | null;
-  status?: OrderStatus;
-  amount?: number | null;
-  currency?: 'USD' | null;
-  accessToken?: string | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
+ * Products Collection.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "products".
  */
@@ -288,7 +238,14 @@ export interface Product {
         id?: string | null;
       }[]
     | null;
-  layout?: unknown[] | null;
+  layout?:
+    | {
+        test?: string | null;
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'testBlock';
+      }[]
+    | null;
   inventory?: number | null;
   enableVariants?: boolean | null;
   variantTypes?: (number | VariantType)[] | null;
@@ -297,8 +254,8 @@ export interface Product {
     hasNextPage?: boolean;
     totalDocs?: number;
   };
-  priceInUSDEnabled?: boolean | null;
-  priceInUSD?: number | null;
+  priceInPKREnabled?: boolean | null;
+  priceInPKR?: number | null;
   relatedProducts?: (number | Product)[] | null;
   meta?: {
     title?: string | null;
@@ -400,8 +357,8 @@ export interface Variant {
   product: number | Product;
   options: (number | VariantOption)[];
   inventory?: number | null;
-  priceInUSDEnabled?: boolean | null;
-  priceInUSD?: number | null;
+  priceInPKREnabled?: boolean | null;
+  priceInPKR?: number | null;
   updatedAt: string;
   createdAt: string;
   deletedAt?: string | null;
@@ -414,11 +371,132 @@ export interface Variant {
 export interface Category {
   id: number;
   title: string;
+  image?: (number | null) | Media;
+  /**
+   * Related Products.
+   */
+  products?: {
+    docs?: (number | Product)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
   /**
    * When enabled, the slug will auto-generate from the title field on save and autosave.
    */
   generateSlug?: boolean | null;
   slug: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "categories-blocks".
+ */
+export interface CategoriesBlocks {
+  label?: string | null;
+  enableSlides?: boolean | null;
+  enableSpecificCategories?: boolean | null;
+  /**
+   * Select Which Categories should show in this section.
+   */
+  categories?: (number | Category)[] | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'categories-blocks';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "carousel-block".
+ */
+export interface CarouselBlock {
+  slides?:
+    | {
+        type?: ('internal' | 'external') | null;
+        url?: string | null;
+        image?: (number | null) | Media;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'carousel-block';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "users".
+ */
+export interface User {
+  id: number;
+  name?: string | null;
+  roles?: ('admin' | 'customer')[] | null;
+  orders?: {
+    docs?: (number | Order)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  cart?: {
+    docs?: (number | Cart)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  addresses?: {
+    docs?: (number | Address)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  updatedAt: string;
+  createdAt: string;
+  email: string;
+  resetPasswordToken?: string | null;
+  resetPasswordExpiration?: string | null;
+  salt?: string | null;
+  hash?: string | null;
+  loginAttempts?: number | null;
+  lockUntil?: string | null;
+  sessions?:
+    | {
+        id: string;
+        createdAt?: string | null;
+        expiresAt: string;
+      }[]
+    | null;
+  password?: string | null;
+  collection: 'users';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "orders".
+ */
+export interface Order {
+  id: number;
+  items?:
+    | {
+        product?: (number | null) | Product;
+        variant?: (number | null) | Variant;
+        quantity: number;
+        id?: string | null;
+      }[]
+    | null;
+  shippingAddress?: {
+    title?: string | null;
+    firstName?: string | null;
+    lastName?: string | null;
+    company?: string | null;
+    addressLine1?: string | null;
+    addressLine2?: string | null;
+    city?: string | null;
+    state?: string | null;
+    postalCode?: string | null;
+    country?: string | null;
+    phone?: string | null;
+  };
+  customer?: (number | null) | User;
+  customerEmail?: string | null;
+  transactions?: (number | Transaction)[] | null;
+  status?: OrderStatus;
+  amount?: number | null;
+  currency?: 'PKR' | null;
+  accessToken?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -455,7 +533,7 @@ export interface Transaction {
   order?: (number | null) | Order;
   cart?: (number | null) | Cart;
   amount?: number | null;
-  currency?: 'USD' | null;
+  currency?: 'PKR' | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -478,7 +556,7 @@ export interface Cart {
   purchasedAt?: string | null;
   status?: ('active' | 'purchased' | 'abandoned') | null;
   subtotal?: number | null;
-  currency?: 'USD' | null;
+  currency?: 'PKR' | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -550,7 +628,12 @@ export interface Address {
 export interface Page {
   id: number;
   title: string;
-  publishedOn?: string | null;
+  /**
+   * If you want to show your collections like: Products, Categories etc then you have to change collection.
+   */
+  enableCollection: boolean;
+  configuredCollectionSlug?: string | null;
+  layout?: (ProductsBlocks | CategoriesBlocks | CarouselBlock)[] | null;
   meta?: {
     title?: string | null;
     /**
@@ -567,6 +650,29 @@ export interface Page {
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "menus".
+ */
+export interface Menu {
+  id: number;
+  title: string;
+  navItems?:
+    | {
+        type?: ('internal' | 'external') | null;
+        newTab?: boolean | null;
+        page?: {
+          relationTo: 'pages';
+          value: number | Page;
+        } | null;
+        url?: string | null;
+        label?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -800,6 +906,10 @@ export interface PayloadLockedDocument {
         value: number | Media;
       } | null)
     | ({
+        relationTo: 'menus';
+        value: number | Menu;
+      } | null)
+    | ({
         relationTo: 'forms';
         value: number | Form;
       } | null)
@@ -914,7 +1024,9 @@ export interface UsersSelect<T extends boolean = true> {
  */
 export interface PagesSelect<T extends boolean = true> {
   title?: T;
-  publishedOn?: T;
+  enableCollection?: T;
+  configuredCollectionSlug?: T;
+  layout?: T | {};
   meta?:
     | T
     | {
@@ -934,6 +1046,8 @@ export interface PagesSelect<T extends boolean = true> {
  */
 export interface CategoriesSelect<T extends boolean = true> {
   title?: T;
+  image?: T;
+  products?: T;
   generateSlug?: T;
   slug?: T;
   updatedAt?: T;
@@ -957,6 +1071,25 @@ export interface MediaSelect<T extends boolean = true> {
   height?: T;
   focalX?: T;
   focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "menus_select".
+ */
+export interface MenusSelect<T extends boolean = true> {
+  title?: T;
+  navItems?:
+    | T
+    | {
+        type?: T;
+        newTab?: T;
+        page?: T;
+        url?: T;
+        label?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1136,8 +1269,8 @@ export interface VariantsSelect<T extends boolean = true> {
   product?: T;
   options?: T;
   inventory?: T;
-  priceInUSDEnabled?: T;
-  priceInUSD?: T;
+  priceInPKREnabled?: T;
+  priceInPKR?: T;
   updatedAt?: T;
   createdAt?: T;
   deletedAt?: T;
@@ -1182,13 +1315,23 @@ export interface ProductsSelect<T extends boolean = true> {
         variantOption?: T;
         id?: T;
       };
-  layout?: T | {};
+  layout?:
+    | T
+    | {
+        testBlock?:
+          | T
+          | {
+              test?: T;
+              id?: T;
+              blockName?: T;
+            };
+      };
   inventory?: T;
   enableVariants?: T;
   variantTypes?: T;
   variants?: T;
-  priceInUSDEnabled?: T;
-  priceInUSD?: T;
+  priceInPKREnabled?: T;
+  priceInPKR?: T;
   relatedProducts?: T;
   meta?:
     | T
@@ -1349,21 +1492,7 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
  */
 export interface Header {
   id: number;
-  navItems?:
-    | {
-        link: {
-          type?: ('reference' | 'custom') | null;
-          newTab?: boolean | null;
-          reference?: {
-            relationTo: 'pages';
-            value: number | Page;
-          } | null;
-          url?: string | null;
-          label: string;
-        };
-        id?: string | null;
-      }[]
-    | null;
+  mainMenu?: (number | null) | Menu;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -1373,21 +1502,34 @@ export interface Header {
  */
 export interface Footer {
   id: number;
-  navItems?:
-    | {
-        link: {
-          type?: ('reference' | 'custom') | null;
-          newTab?: boolean | null;
-          reference?: {
-            relationTo: 'pages';
-            value: number | Page;
-          } | null;
-          url?: string | null;
-          label: string;
-        };
-        id?: string | null;
-      }[]
-    | null;
+  mainMenu?: (number | null) | Menu;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "settings".
+ */
+export interface Setting {
+  id: number;
+  brand?: string | null;
+  slogan?: string | null;
+  /**
+   * The logo will visible on dark theme
+   */
+  darkLogo?: (number | null) | Media;
+  /**
+   * The logo will visible on light theme
+   */
+  lightLogo?: (number | null) | Media;
+  /**
+   * The Open Graph Image.
+   */
+  og?: (number | null) | Media;
+  /**
+   * The Favicon.
+   */
+  favicon?: (number | null) | Media;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -1396,20 +1538,7 @@ export interface Footer {
  * via the `definition` "header_select".
  */
 export interface HeaderSelect<T extends boolean = true> {
-  navItems?:
-    | T
-    | {
-        link?:
-          | T
-          | {
-              type?: T;
-              newTab?: T;
-              reference?: T;
-              url?: T;
-              label?: T;
-            };
-        id?: T;
-      };
+  mainMenu?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
@@ -1419,20 +1548,22 @@ export interface HeaderSelect<T extends boolean = true> {
  * via the `definition` "footer_select".
  */
 export interface FooterSelect<T extends boolean = true> {
-  navItems?:
-    | T
-    | {
-        link?:
-          | T
-          | {
-              type?: T;
-              newTab?: T;
-              reference?: T;
-              url?: T;
-              label?: T;
-            };
-        id?: T;
-      };
+  mainMenu?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "settings_select".
+ */
+export interface SettingsSelect<T extends boolean = true> {
+  brand?: T;
+  slogan?: T;
+  darkLogo?: T;
+  lightLogo?: T;
+  og?: T;
+  favicon?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

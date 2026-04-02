@@ -13,16 +13,21 @@ import {
   lexicalEditor,
 } from '@payloadcms/richtext-lexical'
 import path from 'path'
-import { buildConfig } from 'payload'
+import { TextField, buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
 
 import { Categories } from '@/collections/Categories'
 import { Media } from '@/collections/Media'
 import { Pages } from '@/collections/Pages'
 import { Users } from '@/collections/Users'
+import { Menus } from '@/collections/Menus'
 import { Footer } from '@/globals/Footer'
 import { Header } from '@/globals/Header'
+import { Settings } from '@/globals/Settings'
 import { plugins } from './plugins'
+import { ProductsBlock } from './blocks/ProductsBlock'
+import { CategoriesBlock } from './blocks/CategoriesBlock'
+import { CarouselBlock } from './blocks/CarouselBlock'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -31,7 +36,9 @@ export default buildConfig({
   admin: {
     user: Users.slug,
   },
-  collections: [Users, Pages, Categories, Media],
+  collections: [Users, Pages, Categories, Media, Menus],
+  globals: [Header, Footer, Settings],
+  blocks: [ProductsBlock, CategoriesBlock, CarouselBlock],
   db: postgresAdapter({
     blocksAsJSON: true,
     pool: {
@@ -58,22 +65,23 @@ export default buildConfig({
           enabledCollections: ['pages'],
           fields: ({ defaultFields }) => {
             const defaultFieldsWithoutUrl = defaultFields.filter((field) => {
-              if ('name' in field && field.name === 'url') return false
+              if ('name' in field && field.name === 'url') {
+                return false
+              }
               return true
             })
 
-            return [
-              ...defaultFieldsWithoutUrl,
-              {
-                name: 'url',
-                type: 'text',
-                admin: {
-                  condition: ({ linkType }) => linkType !== 'internal',
-                },
-                label: ({ t }) => t('fields:enterURL'),
-                required: true,
+            const linkTypeField: TextField = {
+              name: 'url',
+              type: 'text',
+              admin: {
+                condition: ({ linkType }) => linkType !== 'internal',
               },
-            ]
+              label: ({ t }) => t('fields:enterURL'),
+              required: true,
+            }
+
+            return [...defaultFieldsWithoutUrl, linkTypeField]
           },
         }),
         IndentFeature(),
@@ -83,7 +91,6 @@ export default buildConfig({
   }),
   //email: nodemailerAdapter(),
   endpoints: [],
-  globals: [Header, Footer],
   plugins,
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
