@@ -2,8 +2,8 @@ import { cn } from "@/lib/utils";
 import React from "react";
 import { Portal, PortalBackdrop } from "@/components/ui/portal";
 import { Button } from "@/components/ui/button";
-import { navLinks } from "@/components/header";
 import { XIcon, MenuIcon } from "lucide-react";
+import { navLinks } from "@/globals/Header/header.client";
 
 export function MobileNav() {
 	const [open, setOpen] = React.useState(false);

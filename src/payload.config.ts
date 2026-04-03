@@ -20,7 +20,6 @@ import { Categories } from '@/collections/Categories'
 import { Media } from '@/collections/Media'
 import { Pages } from '@/collections/Pages'
 import { Users } from '@/collections/Users'
-import { Menus } from '@/collections/Menus'
 import { Footer } from '@/globals/Footer'
 import { Header } from '@/globals/Header'
 import { Settings } from '@/globals/Settings'
@@ -36,7 +35,7 @@ export default buildConfig({
   admin: {
     user: Users.slug,
   },
-  collections: [Users, Pages, Categories, Media, Menus],
+  collections: [Users, Pages, Categories, Media],
   globals: [Header, Footer, Settings],
   blocks: [ProductsBlock, CategoriesBlock, CarouselBlock],
   db: postgresAdapter({

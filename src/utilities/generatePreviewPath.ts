@@ -20,7 +20,8 @@ export const generatePreviewPath = ({ collection, slug }: Props) => {
     const encodedParams = new URLSearchParams({
         slug,
         collection,
-        path: `${collectionPrefixMap[collection]}/${slug}`,
+        // path: `${collectionPrefixMap[collection]}/${slug}`,
+        path: `/${collection}/${slug}`,
         previewSecret: process.env.PREVIEW_SECRET || '',
     })
 

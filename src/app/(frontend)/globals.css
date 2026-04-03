@@ -1,13 +1,14 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
+@plugin "@tailwindcss/typography";
 
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --font-sans: var(--font-geist-sans), sans-serif;
   --font-mono: var(--font-geist-mono), sans-serif;
-
+  --font-raleway: var(--font-raleway), sans-serif;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -127,6 +128,6 @@
     @apply bg-background text-foreground;
   }
   html {
-    @apply font-mono;
+    @apply font-raleway;
   }
 }

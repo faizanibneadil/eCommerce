@@ -34,11 +34,22 @@ export const Categories: CollectionConfig = {
             on: 'categories',
             admin: {
                 description: 'Related Products.',
-                disableBulkEdit: undefined
+                disableBulkEdit: undefined,
+                allowCreate: false,
+                disableRowTypes: true,
+                disableGroupBy: true,
+                disableListFilter: true,
+                disableListColumn: true,
             }
         },
         slugField({
             position: undefined,
         }),
     ],
+    versions: {
+        drafts: {
+            autosave: true,
+        },
+        maxPerDoc: 50,
+    },
 }

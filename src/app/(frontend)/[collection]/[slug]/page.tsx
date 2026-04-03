@@ -1,39 +1,43 @@
-import { draftMode } from "next/headers"
-import { BlockSlug, getPayload } from "payload"
+import { RenderBlocks } from "@/components/RenderBlocks"
+import { RenderCollection } from "@/components/RenderCollection"
+import { RenderCollectionView } from "@/components/RenderCollectionView"
 import config from '@payload-config'
+import { draftMode } from "next/headers"
+import { notFound } from "next/navigation"
+import { CollectionSlug, getPayload } from "payload"
+import { Suspense } from "react"
 
 
-const blocksMap: Record<BlockSlug, React.ComponentType> = {
-    "carousel-block": () => <div>Slider</div>,
-    "categories-blocks": () => <div>Categories</div>,
-    "products-blocks": () => <div>Products</div>
-}
-
-export default async function Page(props: { params: Promise<{ collection: string, slug: string }> }) {
-    const slug = (await props.params)?.slug
+export default async function Page(props: { params: Promise<{ collection: CollectionSlug, slug: string }> }) {
+    const params = await props.params
     const page = await queryPageBySlug({
-        slug
+        slug: params.slug
     })
-    // console.log(page)
 
-    if (!page && slug) {
-        return null
+    if (!page && !params.slug && !params.collection) {
+        return notFound()
     }
 
     if (page?.enableCollection) {
-        return <div>
-            Show Collection of {slug}
-        </div>
+        return (
+            <Suspense fallback='Loading Collection ...'>
+                <RenderCollection collectionSlug={page?.configuredCollectionSlug as any} />
+            </Suspense>
+        )
     }
 
+    if (Boolean(page?.layout?.length)) {
+        return <RenderBlocks blocks={page?.layout} />
+    }
 
-
-    return page?.layout?.map(block => {
-        const { blockType } = block
-        const Block = blocksMap[blockType]
-        return <Block />
-    })
+    return (
+        <Suspense fallback='loading view ....'>
+            <RenderCollectionView collectionSlug={params.collection} slug={params.slug} />
+        </Suspense>
+    )
 }
+
+
 
 
 const queryPageBySlug = async ({ slug }: { slug: string }) => {
@@ -61,3 +65,5 @@ const queryPageBySlug = async ({ slug }: { slug: string }) => {
 
     return result.docs?.[0] || null
 }
+
+
