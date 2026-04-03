@@ -71,16 +71,15 @@ export interface Config {
     users: UserAuthOperations;
   };
   blocks: {
-    'products-blocks': ProductsBlocks;
-    'categories-blocks': CategoriesBlocks;
-    'carousel-block': CarouselBlock;
+    'products-blocks': ProductsPropsTypes;
+    'categories-blocks': CategoriesPropsTypes;
+    'carousel-block': CarouselPropsTypes;
   };
   collections: {
     users: User;
     pages: Page;
     categories: Category;
     media: Media;
-    menus: Menu;
     forms: Form;
     'form-submissions': FormSubmission;
     addresses: Address;
@@ -117,7 +116,6 @@ export interface Config {
     pages: PagesSelect<false> | PagesSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
-    menus: MenusSelect<false> | MenusSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
     addresses: AddressesSelect<false> | AddressesSelect<true>;
@@ -193,9 +191,9 @@ export interface UserAuthOperations {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "products-blocks".
+ * via the `definition` "ProductsPropsTypes".
  */
-export interface ProductsBlocks {
+export interface ProductsPropsTypes {
   label?: string | null;
   enableSlides?: boolean | null;
   enableSpecificProducts?: boolean | null;
@@ -387,12 +385,13 @@ export interface Category {
   slug: string;
   updatedAt: string;
   createdAt: string;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "categories-blocks".
+ * via the `definition` "CategoriesPropsTypes".
  */
-export interface CategoriesBlocks {
+export interface CategoriesPropsTypes {
   label?: string | null;
   enableSlides?: boolean | null;
   enableSpecificCategories?: boolean | null;
@@ -406,9 +405,9 @@ export interface CategoriesBlocks {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "carousel-block".
+ * via the `definition` "CarouselPropsTypes".
  */
-export interface CarouselBlock {
+export interface CarouselPropsTypes {
   slides?:
     | {
         type?: ('internal' | 'external') | null;
@@ -633,7 +632,7 @@ export interface Page {
    */
   enableCollection: boolean;
   configuredCollectionSlug?: string | null;
-  layout?: (ProductsBlocks | CategoriesBlocks | CarouselBlock)[] | null;
+  layout?: (ProductsPropsTypes | CategoriesPropsTypes | CarouselPropsTypes)[] | null;
   meta?: {
     title?: string | null;
     /**
@@ -650,29 +649,6 @@ export interface Page {
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "menus".
- */
-export interface Menu {
-  id: number;
-  title: string;
-  navItems?:
-    | {
-        type?: ('internal' | 'external') | null;
-        newTab?: boolean | null;
-        page?: {
-          relationTo: 'pages';
-          value: number | Page;
-        } | null;
-        url?: string | null;
-        label?: string | null;
-        id?: string | null;
-      }[]
-    | null;
-  updatedAt: string;
-  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -906,10 +882,6 @@ export interface PayloadLockedDocument {
         value: number | Media;
       } | null)
     | ({
-        relationTo: 'menus';
-        value: number | Menu;
-      } | null)
-    | ({
         relationTo: 'forms';
         value: number | Form;
       } | null)
@@ -1052,6 +1024,7 @@ export interface CategoriesSelect<T extends boolean = true> {
   slug?: T;
   updatedAt?: T;
   createdAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1071,25 +1044,6 @@ export interface MediaSelect<T extends boolean = true> {
   height?: T;
   focalX?: T;
   focalY?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "menus_select".
- */
-export interface MenusSelect<T extends boolean = true> {
-  title?: T;
-  navItems?:
-    | T
-    | {
-        type?: T;
-        newTab?: T;
-        page?: T;
-        url?: T;
-        label?: T;
-        id?: T;
-      };
-  updatedAt?: T;
-  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1492,7 +1446,19 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
  */
 export interface Header {
   id: number;
-  mainMenu?: (number | null) | Menu;
+  navItems?:
+    | {
+        type?: ('internal' | 'external') | null;
+        newTab?: boolean | null;
+        page?: {
+          relationTo: 'pages';
+          value: number | Page;
+        } | null;
+        url?: string | null;
+        label?: string | null;
+        id?: string | null;
+      }[]
+    | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -1502,7 +1468,19 @@ export interface Header {
  */
 export interface Footer {
   id: number;
-  mainMenu?: (number | null) | Menu;
+  navItems?:
+    | {
+        type?: ('internal' | 'external') | null;
+        newTab?: boolean | null;
+        page?: {
+          relationTo: 'pages';
+          value: number | Page;
+        } | null;
+        url?: string | null;
+        label?: string | null;
+        id?: string | null;
+      }[]
+    | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -1538,7 +1516,16 @@ export interface Setting {
  * via the `definition` "header_select".
  */
 export interface HeaderSelect<T extends boolean = true> {
-  mainMenu?: T;
+  navItems?:
+    | T
+    | {
+        type?: T;
+        newTab?: T;
+        page?: T;
+        url?: T;
+        label?: T;
+        id?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
@@ -1548,7 +1535,16 @@ export interface HeaderSelect<T extends boolean = true> {
  * via the `definition` "footer_select".
  */
 export interface FooterSelect<T extends boolean = true> {
-  mainMenu?: T;
+  navItems?:
+    | T
+    | {
+        type?: T;
+        newTab?: T;
+        page?: T;
+        url?: T;
+        label?: T;
+        id?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

@@ -1,22 +1,15 @@
-// import { link } from "@/fields/link";
-import { CollectionConfig } from "payload";
+import type { GlobalConfig } from 'payload'
 
-export const Menus: CollectionConfig<'menus'> = {
-    slug: 'menus',
-    labels: {
-        plural: 'Menus',
-        singular: 'Menu'
-    },
-    admin: {
-        useAsTitle: 'title'
+import { adminOnly } from '@/access/adminOnly'
+import { revalidateTag } from 'next/cache'
+
+export const Header: GlobalConfig = {
+    slug: 'header',
+    access: {
+        read: () => true,
+        update: adminOnly,
     },
     fields: [
-        {
-            type: 'text',
-            label: 'Title',
-            name: 'title',
-            required: true
-        },
         {
             name: 'navItems',
             type: 'array',
@@ -102,4 +95,9 @@ export const Menus: CollectionConfig<'menus'> = {
             ],
         },
     ],
+    hooks: {
+        afterChange: [
+            () => revalidateTag(`global_header`, 'max')
+        ]
+    }
 }

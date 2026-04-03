@@ -2,6 +2,7 @@ import { Block } from "payload";
 
 export const CategoriesBlock: Block = {
     slug: 'categories-blocks',
+    interfaceName: 'CategoriesPropsTypes',
     labels: {
         plural: 'Categories',
         singular: 'Category'

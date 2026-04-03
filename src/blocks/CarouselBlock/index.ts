@@ -2,6 +2,7 @@ import { Block } from "payload";
 
 export const CarouselBlock: Block = {
     slug: 'carousel-block',
+    interfaceName: 'CarouselPropsTypes',
     fields: [
         {
             type: 'array',
