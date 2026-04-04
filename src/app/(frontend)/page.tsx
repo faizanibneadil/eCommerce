@@ -1,13 +1,10 @@
-import { Button } from "@/components/ui/button"
+import { PayloadRedirects } from "@/components/PayloadRedirects"
 import { Suspense } from "react"
 
-export default function Home() {
+export default function Page() {
   return (
-    <div>
-      <Suspense fallback={'loading...'}>
-        <Button>Click me</Button>
-      </Suspense>
-      <h1 className='underline'>heading</h1>
-    </div>
+    <Suspense fallback='Redirecting ...'>
+      <PayloadRedirects url='/' />
+    </Suspense>
   )
 }
