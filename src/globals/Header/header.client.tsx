@@ -9,6 +9,8 @@ import Link from "next/link";
 import { getBase64Blur, getMediaUrl } from "@/utilities/getURL";
 import { ShoppingCart } from "./ShoppingCart";
 import Image from "next/image";
+import { useAuth } from "@/providers/Auth";
+import { UserMenu } from "./UserMenu";
 
 
 function formatHref(item: NonNullable<Header['navItems']>[number]) {
@@ -31,7 +33,7 @@ function formatHref(item: NonNullable<Header['navItems']>[number]) {
 
 export function HeaderClient(props: { headerConfig: Header, settingsConfig: Setting }) {
 	const scrolled = useScroll(10);
-
+	const { user, status } = useAuth()
 	const menu = props.headerConfig?.navItems?.map(item => ({
 		label: item?.label,
 		href: formatHref(item),
@@ -74,9 +76,13 @@ export function HeaderClient(props: { headerConfig: Header, settingsConfig: Sett
 						))}
 					</div>
 					<ShoppingCart />
-					<Button size="sm" variant="outline">
-						Sign In
-					</Button>
+					{Boolean(user) ? (
+						<UserMenu />
+					) : (
+						<Button className={cn({ 'cursor-not-allowed': status === 'loading' })} size="sm" variant="outline" nativeButton={false} render={<Link href={status === 'loading' ? '#' : '/login'} />}>
+							Sign In
+						</Button>
+					)}
 				</div>
 				<MobileNav menu={menu} />
 			</nav>

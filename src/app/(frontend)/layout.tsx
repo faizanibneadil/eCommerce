@@ -69,13 +69,9 @@ export default async function RootLayout({ children }: React.PropsWithChildren) 
                 "after:absolute after:-inset-y-14 after:-right-px after:w-px after:bg-border"
               )}
             >
-              {/* <HeroSection />
-            <LogosSection /> */}
               {children}
             </main>
           </div>
-          {/* <main className='w-full max-w-5xl mx-auto px-4'>{children}</main> */}
-          {/* <Footer /> */}
         </Providers>
       </body>
     </html>

@@ -26,7 +26,7 @@ type AuthContext = {
   logout: Logout
   resetPassword: ResetPassword
   setUser: (user: User | null) => void // eslint-disable-line no-unused-vars
-  status: 'loggedIn' | 'loggedOut' | undefined
+  status: 'loggedIn' | 'loggedOut' | 'loading' | undefined
   user?: User | null
 }
 
@@ -37,7 +37,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // used to track the single event of logging in or logging out
   // useful for `useEffect` hooks that should only run once
-  const [status, setStatus] = useState<'loggedIn' | 'loggedOut' | undefined>()
+  const [status, setStatus] = useState<'loggedIn' | 'loggedOut' | 'loading' | undefined>()
   const create = useCallback<Create>(async (args) => {
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/create`, {
@@ -118,6 +118,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     const fetchMe = async () => {
       try {
+        setStatus('loading')
         const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/me`, {
           credentials: 'include',
           headers: {
@@ -131,11 +132,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           setUser(meUser || null)
           setStatus(meUser ? 'loggedIn' : undefined)
         } else {
+          setStatus(undefined)
           throw new Error('An error occurred while fetching your account.')
         }
       } catch (e) {
         setUser(null)
+        setStatus(undefined)
         throw new Error('An error occurred while fetching your account.')
+      } finally {
+        setStatus(undefined)
       }
     }
 
