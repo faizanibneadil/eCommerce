@@ -6,8 +6,9 @@ import { Button } from "@/components/ui/button";
 import { MobileNav } from "@/components/mobile-nav";
 import { Header, Setting } from "@/payload-types";
 import Link from "next/link";
-import { getMediaUrl } from "@/utilities/getURL";
+import { getBase64Blur, getMediaUrl } from "@/utilities/getURL";
 import { ShoppingCart } from "./ShoppingCart";
+import Image from "next/image";
 
 
 function formatHref(item: NonNullable<Header['navItems']>[number]) {
@@ -53,9 +54,16 @@ export function HeaderClient(props: { headerConfig: Header, settingsConfig: Sett
 					href="#"
 				>
 					{/* <Logo className="h-4" /> */}
-					<img
-						src={getMediaUrl(props.settingsConfig?.lightLogo)}
-						className="h-24"
+					<Image
+						placeholder="blur"
+						blurDataURL={getBase64Blur(props?.settingsConfig?.lightLogo)}
+						src={getMediaUrl(props?.settingsConfig?.lightLogo)}
+						className="h-24 w-20"
+						alt='Logo'
+						fetchPriority="high"
+						loading="lazy"
+						height={40}
+						width={200}
 					/>
 				</a>
 				<div className="hidden items-center gap-2 md:flex">

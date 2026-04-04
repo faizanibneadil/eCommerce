@@ -10,7 +10,8 @@ import {
     CarouselPrevious,
 } from "@/components/ui/carousel";
 import { CarouselPropsTypes } from "@/payload-types";
-import { getMediaUrl } from "@/utilities/getURL";
+import { getBase64Blur, getMediaUrl } from "@/utilities/getURL";
+import Image from "next/image";
 
 export function CarouselClient(props: CarouselPropsTypes) {
     const [api, setApi] = React.useState<CarouselApi>();
@@ -45,10 +46,16 @@ export function CarouselClient(props: CarouselPropsTypes) {
                             : getMediaUrl(slide.image)
                         return (
                             <CarouselItem key={`${imgSrc}.${idx}`} className="h-98">
-                                <img
-                                    alt="dddepth-248"
-                                    className="size-full object-cover"
+                                <Image
+                                    placeholder="blur"
+                                    blurDataURL={slide.type === 'external' ? undefined : getBase64Blur(slide.image)}
                                     src={imgSrc as string}
+                                    className="size-full object-cover overflow-hidden"
+                                    alt={'Slide'}
+                                    fetchPriority="high"
+                                    loading="lazy"
+                                    height={40}
+                                    width={200}
                                 />
                             </CarouselItem>
                         )
@@ -72,10 +79,16 @@ export function CarouselClient(props: CarouselPropsTypes) {
                                 key={idx}
                                 onClick={() => handleThumbClick(idx)}
                             >
-                                <img
-                                    alt="dddepth-248"
-                                    className="size-full object-cover"
+                                <Image
+                                    placeholder="blur"
+                                    blurDataURL={slide.type === 'external' ? undefined : getBase64Blur(slide.image)}
                                     src={imgSrc as string}
+                                    className="size-full object-cover overflow-hidden"
+                                    alt={'Slide'}
+                                    fetchPriority="high"
+                                    loading="lazy"
+                                    height={40}
+                                    width={200}
                                 />
                             </CarouselItem>
                         )
