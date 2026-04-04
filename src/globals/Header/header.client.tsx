@@ -7,21 +7,8 @@ import { MobileNav } from "@/components/mobile-nav";
 import { Header, Setting } from "@/payload-types";
 import Link from "next/link";
 import { getMediaUrl } from "@/utilities/getURL";
+import { ShoppingCart } from "./ShoppingCart";
 
-export const navLinks = [
-	{
-		label: "Features",
-		href: "#",
-	},
-	{
-		label: "Pricing",
-		href: "#",
-	},
-	{
-		label: "About",
-		href: "#",
-	},
-];
 
 function formatHref(item: NonNullable<Header['navItems']>[number]) {
 	let url: string = ''
@@ -78,12 +65,12 @@ export function HeaderClient(props: { headerConfig: Header, settingsConfig: Sett
 							<Button key={link.label} size="sm" variant="ghost" render={<Link href={link.href} {...link.newTabProps} />} nativeButton={false}>{link.label}</Button>
 						))}
 					</div>
-					{/* <Button size="sm" variant="outline">
+					<ShoppingCart />
+					<Button size="sm" variant="outline">
 						Sign In
 					</Button>
-					<Button size="sm">Get Started</Button> */}
 				</div>
-				<MobileNav />
+				<MobileNav menu={menu} />
 			</nav>
 		</header>
 	);

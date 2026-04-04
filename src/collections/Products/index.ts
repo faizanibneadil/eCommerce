@@ -1,4 +1,3 @@
-import { CollectionBeforeOperationHook, slugField } from 'payload'
 import { generatePreviewPath } from '@/utilities/generatePreviewPath'
 import { CollectionOverride } from '@payloadcms/plugin-ecommerce/types'
 import {
@@ -15,8 +14,7 @@ import {
     InlineToolbarFeature,
     lexicalEditor,
 } from '@payloadcms/richtext-lexical'
-import { DefaultDocumentIDType, Where } from 'payload'
-import { Product } from '@/payload-types'
+import { DefaultDocumentIDType, Where, slugField } from 'payload'
 
 export const ProductsCollection: CollectionOverride = ({ defaultCollection }) => ({
     ...defaultCollection,
