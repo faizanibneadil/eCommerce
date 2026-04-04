@@ -1,7 +1,7 @@
 import { PayloadRedirects } from "@/components/PayloadRedirects"
 import { RenderBlocks } from "@/components/RenderBlocks"
-import { RenderCollection } from "@/components/RenderCollection"
-import { RenderCollectionView } from "@/components/RenderCollectionView"
+import { RenderCollection, collectionMap } from "@/components/RenderCollection"
+import { RenderCollectionView, collectionViewMap } from "@/components/RenderCollectionView"
 import config from '@payload-config'
 import { draftMode } from "next/headers"
 import { notFound } from "next/navigation"
@@ -20,12 +20,13 @@ export default async function Page(props: { params: Promise<{ collection: Collec
     }
 
     if (page?.enableCollection) {
+        const Skeleton = collectionMap[params.collection as 'products' | 'categories'].Skeleton || (() => null)
         return (
             <>
                 <Suspense fallback='Redirecting ...'>
                     <PayloadRedirects url={`/${params.collection}/${params.slug}`} />
                 </Suspense>
-                <Suspense fallback='Loading Collection ...'>
+                <Suspense fallback={<Skeleton />}>
                     <RenderCollection collectionSlug={page?.configuredCollectionSlug as any} />
                 </Suspense>
             </>
@@ -36,12 +37,14 @@ export default async function Page(props: { params: Promise<{ collection: Collec
         return <RenderBlocks blocks={page?.layout} />
     }
 
+    const Skeleton = collectionViewMap[params.collection as 'products' | 'categories'].Skeleton || (() => null)
+
     return (
         <>
             <Suspense fallback='Redirecting ...'>
                 <PayloadRedirects url={`/${params.collection}/${params.slug}`} />
             </Suspense>
-            <Suspense fallback='loading view ....'>
+            <Suspense fallback={<Skeleton />}>
                 <RenderCollectionView collectionSlug={params.collection} slug={params.slug} />
             </Suspense>
         </>

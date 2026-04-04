@@ -48,7 +48,7 @@ export const AdminBar: React.FC<{
         hidden: !show,
       })}
     >
-      <div className="container">
+      <div className="container max-w-4xl grow w-full mx-auto">
         <PayloadAdminBar
           {...adminBarProps}
           className="py-2 text-white"

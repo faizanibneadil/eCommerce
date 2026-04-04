@@ -5,9 +5,18 @@ import config from '@payload-config'
 import { SingleCategory } from "@/collections/Categories/components/SingleCategory"
 import { SingleProduct } from "@/collections/Products/components/SingleProduct"
 
-const collectionViewMap: Record<'products' | 'categories', React.ComponentType<DataFromCollectionSlug<'products' | 'categories'>>> = {
-    categories: SingleCategory,
-    products: SingleProduct
+export const collectionViewMap: Record<'products' | 'categories', {
+    Component: React.ComponentType<DataFromCollectionSlug<'products' | 'categories'>>,
+    Skeleton: React.ComponentType<any>
+}> = {
+    categories: {
+        Component: SingleCategory,
+        Skeleton: () => <div>Single Category view Skeleton</div>
+    },
+    products: {
+        Component: SingleProduct,
+        Skeleton: () => <div>Single Product View Skeleton</div>
+    }
 }
 
 export const RenderCollectionView: React.FC<{
@@ -23,7 +32,7 @@ export const RenderCollectionView: React.FC<{
         return notFound()
     }
 
-    const View = collectionViewMap[props.collectionSlug as 'products' | 'categories']
+    const View = collectionViewMap[props.collectionSlug as 'products' | 'categories'].Component
 
     // @ts-expect-error
     return <View {...collectionView} />

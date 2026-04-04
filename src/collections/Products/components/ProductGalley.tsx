@@ -1,8 +1,9 @@
 'use client'
 import { Product } from "@/payload-types"
-import { getMediaUrl } from "@/utilities/getURL"
+import { getBase64Blur, getMediaUrl } from "@/utilities/getURL"
+import { motion } from 'motion/react'
+import Image from "next/image"
 import { parseAsString, useQueryState } from 'nuqs'
-import { motion, AnimatePresence } from 'motion/react'
 
 export const ProductGallery: React.FC<{
     gallery: Product['gallery']
@@ -17,19 +18,32 @@ export const ProductGallery: React.FC<{
 
     return (
         <motion.div className="grid grid-cols-3 gap-px" layout>
-            {/* <AnimatePresence> */}
-            <img
+            <Image
                 key={galleryId}
-                // initial={{ opacity: 0 }}
-                // animate={{ opacity: 1 }}
-                // exit={{ opacity: 0 }}
-                // transition={{ duration: 0.3, ease: 'easeInOut' }}
+                placeholder="blur"
+                blurDataURL={getBase64Blur(imgSrc?.image)}
                 src={getMediaUrl(imgSrc?.image)}
-                className="w-full col-span-3"
+                className="size-full object-cover overflow-hidden col-span-3"
+                alt={'Slide'}
+                fetchPriority="high"
+                loading="lazy"
+                height={40}
+                width={200}
             />
-            {/* </AnimatePresence> */}
             {props?.gallery?.map(item => (
-                <img src={getMediaUrl(item.image)} onClick={() => setGalleryId(item.id!)} key={item.id} className="w-full h-22 overflow-hidden object-cover cursor-pointer" />
+                <Image
+                    key={item?.id}
+                    placeholder="blur"
+                    blurDataURL={getBase64Blur(imgSrc?.image)}
+                    src={getMediaUrl(item.image)}
+                    className="w-full h-22 overflow-hidden object-cover cursor-pointer"
+                    alt={'Slide'}
+                    fetchPriority="high"
+                    loading="lazy"
+                    height={40}
+                    width={200}
+                    onClick={() => setGalleryId(item.id!)}
+                />
             ))}
         </motion.div>
     )

@@ -40,3 +40,13 @@ export const getMediaUrl = (media: number | Media | null | undefined): string =>
     // Return empty string for numbers, null, undefined, or invalid objects
     return '';
 };
+
+export const getBase64Blur = (media: number | Media | null | undefined): string => {
+    // If media is a valid object with a non-empty filename, return the constructed URL
+    if (media && typeof media === 'object' && media?.base64Blur) {
+        return media?.base64Blur
+    }
+
+    // Return empty string for numbers, null, undefined, or invalid objects
+    return '';
+};
