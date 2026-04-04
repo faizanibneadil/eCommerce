@@ -95,6 +95,11 @@ export const RenderCollection: React.FC<{
     collectionSlug: 'products' | 'categories',
 }> = async (props) => {
 
+    // TODO: (fix) extra check because favicon.ico is coming in collection slug
+    if (!['products', 'categories'].includes(props.collectionSlug)) {
+        return null
+    }
+
     const collection = await queryCollectionBySlug({
         collection: props.collectionSlug as CollectionSlug
     })
