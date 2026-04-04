@@ -6,6 +6,8 @@ import { Raleway } from 'next/font/google'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
 import { AdminBar } from '@/components/AdminBar'
 import { Header } from '@/globals/Header/header'
+import { PayloadRedirects } from '@/components/PayloadRedirects'
+import { draftMode } from 'next/headers'
 
 const raleway = Raleway({
   subsets: ['latin'],
@@ -40,6 +42,7 @@ const twitterSite = TWITTER_SITE ? ensureStartsWith(TWITTER_SITE, 'https://') : 
 } */
 
 export default async function RootLayout({ children }: React.PropsWithChildren) {
+  const { isEnabled: draft } = await draftMode()
   return (
     <html
       // className={[GeistSans.variable, GeistMono.variable].filter(Boolean).join(' ')}
@@ -55,7 +58,7 @@ export default async function RootLayout({ children }: React.PropsWithChildren) 
       <body>
         <Providers>
           <AdminBar />
-          <LivePreviewListener />
+          {draft && <LivePreviewListener />}
           <div className="relative flex min-h-screen flex-col px-4">
             <Header />
             <main

@@ -1,3 +1,4 @@
+import { PayloadRedirects } from "@/components/PayloadRedirects"
 import { RenderBlocks } from "@/components/RenderBlocks"
 import { RenderCollection } from "@/components/RenderCollection"
 import { RenderCollectionView } from "@/components/RenderCollectionView"
@@ -20,9 +21,14 @@ export default async function Page(props: { params: Promise<{ collection: Collec
 
     if (page?.enableCollection) {
         return (
-            <Suspense fallback='Loading Collection ...'>
-                <RenderCollection collectionSlug={page?.configuredCollectionSlug as any} />
-            </Suspense>
+            <>
+                <Suspense fallback='Redirecting ...'>
+                    <PayloadRedirects url={`/${params.collection}/${params.slug}`} />
+                </Suspense>
+                <Suspense fallback='Loading Collection ...'>
+                    <RenderCollection collectionSlug={page?.configuredCollectionSlug as any} />
+                </Suspense>
+            </>
         )
     }
 
@@ -31,9 +37,14 @@ export default async function Page(props: { params: Promise<{ collection: Collec
     }
 
     return (
-        <Suspense fallback='loading view ....'>
-            <RenderCollectionView collectionSlug={params.collection} slug={params.slug} />
-        </Suspense>
+        <>
+            <Suspense fallback='Redirecting ...'>
+                <PayloadRedirects url={`/${params.collection}/${params.slug}`} />
+            </Suspense>
+            <Suspense fallback='loading view ....'>
+                <RenderCollectionView collectionSlug={params.collection} slug={params.slug} />
+            </Suspense>
+        </>
     )
 }
 
