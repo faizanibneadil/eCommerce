@@ -16,7 +16,7 @@ export default async function Page(props: { params: Promise<{ collection: Collec
     })
 
     if (!page && !params.slug && !params.collection) {
-        return notFound()
+        notFound()
     }
 
     if (page?.enableCollection) {
