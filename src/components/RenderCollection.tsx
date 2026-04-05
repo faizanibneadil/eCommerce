@@ -7,10 +7,12 @@ import { notFound } from "next/navigation"
 import { draftMode } from "next/headers"
 import config from '@payload-config'
 import Image from "next/image"
+import { DecoratedBox } from "./DecoratedBox"
+import { ShimmerEffect } from "@payloadcms/ui"
 
 export const collectionMap: Record<'products' | 'categories', {
     Component: React.ComponentType<PaginatedDocs<DataFromCollectionSlug<'products' | 'categories'>>>,
-    Skeleton: React.ComponentType<any>
+    Skeleton: React.ComponentType<{ totalDocs?: number }>
 }> = {
     products: {
         Component: (props: PaginatedDocs<DataFromCollectionSlug<'products'>>) => {
@@ -48,7 +50,22 @@ export const collectionMap: Record<'products' | 'categories', {
                 </div>
             )
         },
-        Skeleton: () => <div>Products Skeleton</div>
+        Skeleton: ({ totalDocs = 4 }) => (
+            <DecoratedBox>
+                <div className="grid grid-cols-2 border md:grid-cols-4 gap-px">
+                    {Array.from({ length: totalDocs }).map((_, idx) => (
+                        <div key={`products-skeleton-${idx}`} className="flex flex-col gap-px">
+                            <div className="w-full aspect-square">
+                                <ShimmerEffect className="bg-muted" height='100%' width='100%' />
+                            </div>
+                            <div className="p-2">
+                                <ShimmerEffect className="bg-muted" height={16} width='100%' />
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </DecoratedBox>
+        )
     },
     categories: {
         Component: (props: PaginatedDocs<DataFromCollectionSlug<'categories'>>) => {
@@ -86,30 +103,45 @@ export const collectionMap: Record<'products' | 'categories', {
                 </div>
             )
         },
-        Skeleton: () => <div>Categories Skeleton</div>
-    }
+        Skeleton: ({ totalDocs = 4 }) => (
+            <DecoratedBox>
+                <div className="grid grid-cols-2 border md:grid-cols-4 gap-px">
+                    {Array.from({ length: totalDocs }).map((_, idx) => (
+                        <div key={`categories-skeleton-${idx}`} className="flex flex-col gap-px">
+                            <div className="w-full aspect-square">
+                                <ShimmerEffect className="bg-muted" height='100%' width='100%' />
+                            </div>
+                            <div className="p-2">
+                                <ShimmerEffect className="bg-muted" height={16} width='100%' />
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </DecoratedBox>
+        )
+    },
 }
 
 
 export const RenderCollection: React.FC<{
     collectionSlug: 'products' | 'categories',
-}> = async (props) => {
-
+}> = async ({ collectionSlug }) => {
+    console.log({ collectionSlug })
     // TODO: (fix) extra check because favicon.ico is coming in collection slug
-    if (!['products', 'categories'].includes(props.collectionSlug)) {
-        return null
+    if (!Object.keys(collectionMap).includes(collectionSlug)) {
+        notFound()
     }
 
     const collection = await queryCollectionBySlug({
-        collection: props.collectionSlug as CollectionSlug
+        collectionSlug: collectionSlug as CollectionSlug
     })
 
-    if (!Boolean(collection?.docs?.length) || !props.collectionSlug) {
-        return notFound()
+    if (!Boolean(collection?.docs?.length) || !collectionSlug) {
+        notFound()
     }
 
-    if (props.collectionSlug in collectionMap) {
-        const Collection = collectionMap[props.collectionSlug].Component
+    if (collectionSlug in collectionMap) {
+        const Collection = collectionMap[collectionSlug].Component
 
         // @ts-expect-error
         return <Collection {...collection} />
@@ -120,13 +152,13 @@ export const RenderCollection: React.FC<{
 }
 
 
-const queryCollectionBySlug = async ({ collection }: { collection: CollectionSlug }) => {
+const queryCollectionBySlug = async ({ collectionSlug }: { collectionSlug: CollectionSlug }) => {
     const { isEnabled: draft } = await draftMode()
 
     const payload = await getPayload({ config })
 
     const result = await payload.find({
-        collection: collection,
+        collection: collectionSlug,
         draft,
         overrideAccess: draft,
         pagination: true,

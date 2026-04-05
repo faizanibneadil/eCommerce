@@ -35,6 +35,11 @@ export default buildConfig({
   admin: {
     user: Users.slug,
   },
+  folders: {
+    // debug: true,
+    slug: 'folders',
+    browseByFolder: true
+  },
   collections: [Users, Pages, Categories, Media],
   globals: [Header, Footer, Settings],
   blocks: [ProductsBlock, CategoriesBlock, CarouselBlock],
