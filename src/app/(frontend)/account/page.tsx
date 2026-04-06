@@ -16,7 +16,7 @@ export default async function Page() {
 
     return (
         <DecoratedBox>
-            <div className="flex items-center justify-center py-20">
+            <div className="flex items-center justify-center px-4 py-2 md:px-6 md:py-4">
                 <div className="w-full max-w-sm animate-in space-y-8">
                     <div className="flex flex-col space-y-1">
                         <h1 className="font-bold text-2xl tracking-wide">My Account!</h1>

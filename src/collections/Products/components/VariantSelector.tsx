@@ -29,7 +29,8 @@ export function VariantSelector({ product }: { product: Product }) {
   }, [variantTypes])
 
   const [query, setQuery] = useQueryStates(querySchema, {
-    shallow: true, // URL update karega baghair server refresh ke
+    shallow: true,
+    scroll: false
   })
 
   if (!hasVariants) {

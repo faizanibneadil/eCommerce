@@ -17,7 +17,7 @@ export default async function Page() {
 
     return (
         <DecoratedBox>
-            <div className="flex items-center justify-center py-40">
+            <div className="flex items-center justify-center  px-4 py-2 md:px-6 md:py-4">
                 <div className="w-full max-w-sm animate-in space-y-8">
                     <div className="flex flex-col space-y-1">
                         <h1 className="font-bold text-2xl tracking-wide">Join Now!</h1>
@@ -28,10 +28,10 @@ export default async function Page() {
                     <div className="space-y-4">
                         <RegisterForm />
                         {/* <AuthDivider>OR</AuthDivider> */}
-                        <Button className="w-full" type="button" variant="outline">
+                        {/* <Button className="w-full" type="button" variant="outline">
                             <GoogleIcon data-icon="inline-start" />
                             Continue with Google
-                        </Button>
+                        </Button> */}
                         {/* <div className="grid grid-cols-2 gap-2 space-y-2"> */}
                         {/* <Button className="w-full" type="button" variant="outline">
                                 <GithubIcon data-icon="inline-start" />

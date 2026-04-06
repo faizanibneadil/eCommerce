@@ -11,14 +11,14 @@ export const DecoratedBox: React.FC<React.PropsWithChildren & {
     return (
         <div className="relative *:border-0">
             {decoration && Array.isArray(decoration) && decoration?.map(dec => (
-                <DecorIcon className="size-4" position={dec} key={dec} />
+                <DecorIcon className="size-4 hidden md:block" position={dec} key={dec} />
             ))}
             {Boolean(decoration?.length) === false && (
                 <>
-                    <DecorIcon className="size-4" position="top-left" />
-                    <DecorIcon className="size-4" position="top-right" />
-                    <DecorIcon className="size-4" position="bottom-left" />
-                    <DecorIcon className="size-4" position="bottom-right" />
+                    <DecorIcon className="size-4 hidden md:block" position="top-left" />
+                    <DecorIcon className="size-4 hidden md:block" position="top-right" />
+                    <DecorIcon className="size-4 hidden md:block" position="bottom-left" />
+                    <DecorIcon className="size-4 hidden md:block" position="bottom-right" />
                 </>
             )}
 

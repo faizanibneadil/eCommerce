@@ -143,7 +143,7 @@ export const AccountForm: React.FC = () => {
                 </FieldDescription>)}
             </Field>
 
-            <Button className="w-full cursor-pointer" size="sm" type="submit">
+            <Button className="w-full cursor-pointer" size="lg" type="submit">
                 {(isLoading || isSubmitting) ? 'Processing' : 'Continue'}
             </Button>
         </form>

@@ -1,7 +1,9 @@
 import { DecoratedBox } from "@/components/DecoratedBox"
+import { ProductCard } from "@/components/ProductCard"
+import { ProductSkeleton } from "@/components/ProductCard/ProductSkeleton"
 import { Product } from "@/payload-types"
-import { getMediaUrl } from "@/utilities/getURL"
-import Link from "next/link"
+import { getProductById } from "@/utilities/getProduct"
+import { Suspense } from "react"
 
 export const RelatedProducts: React.FC<{
     products: Product['relatedProducts']
@@ -13,20 +15,17 @@ export const RelatedProducts: React.FC<{
             </h2>
             <DecoratedBox>
                 <div className="grid grid-cols-2 border md:grid-cols-4 gap-px">
-                    {props?.products?.map(product => typeof product === 'number' ? null : (
-                        <Link href={`/products/${product.slug}`} key={product.id} className="flex flex-col ">
-                            <div className="aspect-square overflow-hidden">
-                                <img
-                                    src={getMediaUrl(product?.gallery?.at(0)?.image)}
-                                    className="w-full h-full object-cover"
-                                    alt={product.title}
-                                />
-                            </div>
-                            <h3 className="text-sm font-medium line-clamp-2 p-2">
-                                {product?.title}
-                            </h3>
-                        </Link>
-                    ))}
+                    {props?.products?.map(product => {
+                        const productPromise = typeof product === 'number'
+                            ? getProductById(product)
+                            : product
+                        const suspenseKey = typeof product === 'number' ? product : product.id
+                        return (
+                            <Suspense key={suspenseKey} fallback={<ProductSkeleton />}>
+                                <ProductCard product={productPromise} />
+                            </Suspense>
+                        )
+                    })}
                 </div>
             </DecoratedBox>
         </section>

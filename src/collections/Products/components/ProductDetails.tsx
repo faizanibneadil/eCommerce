@@ -31,7 +31,7 @@ export const ProductDetails: React.FC<{
         <>
             <h1 className="text-lg md:text-2xl font-medium p-2">{product?.title}</h1>
             {hasVariants && (
-                <div className=''>
+                <div className='px-2 md:px-0'>
                     <DecoratedBox decoration={['top-right']} dividerBottom={false}>
                         <Suspense fallback={null}>
                             <VariantSelector product={product} />
@@ -40,7 +40,7 @@ export const ProductDetails: React.FC<{
                 </div>
             )}
             <DecoratedBox decoration={['bottom-right', 'top-right']}>
-                <div className="flex gap-px items-center justify-between">
+                <div className="flex gap-px items-center justify-between px-2 md:px-0">
                     <Price amount={amount} />
                     <StockIndicator product={product} />
                     <Suspense fallback={null}>
@@ -48,7 +48,7 @@ export const ProductDetails: React.FC<{
                     </Suspense>
                 </div>
             </DecoratedBox>
-            <RichText data={product?.description as SerializedEditorState} className="prose-sm  prose md:prose-md dark:prose-invert p-2" />
+            <RichText data={product?.description as SerializedEditorState} className="prose-sm  prose md:prose-md dark:prose-invert px-2 md:p-2" />
         </>
     )
 }
