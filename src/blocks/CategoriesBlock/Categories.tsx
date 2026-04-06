@@ -1,9 +1,12 @@
+import { CMSImage } from "@/components/ui/CMSImage";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DecorIcon } from "@/components/ui/decor-icon";
 import { FullWidthDivider } from "@/components/ui/full-width-divider";
 import { CategoriesPropsTypes } from "@/payload-types";
+import { getMedia } from "@/utilities/getMedia";
 import { getMediaUrl } from "@/utilities/getURL";
 import Link from "next/link";
+import { Suspense } from "react";
 
 export function Categories(props: CategoriesPropsTypes) {
 
@@ -22,11 +25,17 @@ export function Categories(props: CategoriesPropsTypes) {
                 {props?.categories?.map(category => {
                     return typeof category === 'number' ? null : <Link href={`/categories/${category?.slug}`} key={category?.id} className="flex flex-col ">
                         <div className="aspect-square overflow-hidden">
-                            <img
+                            {/* <img
                                 src={getMediaUrl(category?.image)}
                                 className="w-full h-full object-cover"
                                 alt={category?.title}
-                            />
+                            /> */}
+                            <Suspense fallback='loading image'>
+                                <CMSImage
+                                    alt={category?.title}
+                                    src={typeof category?.image === 'number' ? getMedia(category?.image) : category?.image}
+                                />
+                            </Suspense>
                         </div>
                         <h3 className="text-sm font-medium line-clamp-2 p-2">
                             {category?.title}

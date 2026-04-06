@@ -59,11 +59,11 @@ export default async function RootLayout({ children }: React.PropsWithChildren) 
         <Providers>
           <AdminBar />
           {draft && <LivePreviewListener />}
-          <div className="relative flex min-h-screen flex-col px-4">
+          <div className="relative flex min-h-screen flex-col px-0 md:px-4">
             <Header />
             <main
               className={cn(
-                "relative mx-auto max-w-4xl grow w-full",
+                "relative mx-auto md:max-w-4xl grow w-full",
                 // X Borders
                 "before:absolute before:-inset-y-14 before:-left-px before:w-px before:bg-border",
                 "after:absolute after:-inset-y-14 after:-right-px after:w-px after:bg-border"

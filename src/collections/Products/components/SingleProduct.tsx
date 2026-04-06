@@ -11,7 +11,7 @@ export const SingleProduct: React.FC<DataFromCollectionSlug<'products'>> = (prop
             <DecoratedBox>
                 <div className="grid grid-cols-12 gap-2">
                     <div className="col-span-12 md:col-span-4">
-                        <ProductGallery gallery={props.gallery} />
+                        <ProductGallery product={props} />
                     </div>
                     <div className="col-span-12 md:col-span-8">
                         <ProductDetails product={props} />

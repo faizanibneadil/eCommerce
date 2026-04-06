@@ -12,6 +12,8 @@ import {
 import { CarouselPropsTypes } from "@/payload-types";
 import { getBase64Blur, getMediaUrl } from "@/utilities/getURL";
 import Image from "next/image";
+import { CMSImage } from "@/components/ui/CMSImage";
+import { getMedia } from "@/utilities/getMedia";
 
 export function CarouselClient(props: CarouselPropsTypes) {
     const [api, setApi] = React.useState<CarouselApi>();
@@ -41,22 +43,32 @@ export function CarouselClient(props: CarouselPropsTypes) {
             <Carousel className="w-full" setApi={setApi}>
                 <CarouselContent>
                     {props?.slides?.map((slide, idx) => {
-                        const imgSrc = slide.type === 'external'
+                        const media = slide.type === 'external'
                             ? slide.url && slide.url
-                            : getMediaUrl(slide.image)
+                            : slide.image
                         return (
-                            <CarouselItem key={`${imgSrc}.${idx}`} className="h-98">
-                                <Image
-                                    placeholder="blur"
-                                    blurDataURL={slide.type === 'external' ? undefined : getBase64Blur(slide.image)}
-                                    src={imgSrc as string}
-                                    className="size-full object-cover overflow-hidden"
-                                    alt={'Slide'}
-                                    fetchPriority="high"
-                                    loading="lazy"
-                                    height={40}
-                                    width={200}
-                                />
+                            <CarouselItem key={`${slide.id}.${idx}`} className="h-98">
+                                {typeof media === 'string' ? (
+                                    <Image
+                                        src={media as string}
+                                        className="size-full object-cover overflow-hidden"
+                                        alt={'Slide'}
+                                        fetchPriority="high"
+                                        loading="eager"
+                                        height={40}
+                                        width={200}
+                                    />
+                                ) : (
+                                    <React.Suspense fallback='loading image'>
+                                        <CMSImage
+                                            className="size-full object-cover overflow-hidden"
+                                            height={40}
+                                            width={200}
+                                            alt='Main Slide Image'
+                                            src={typeof media === 'number' ? getMedia(media) : media}
+                                        />
+                                    </React.Suspense>
+                                )}
                             </CarouselItem>
                         )
                     })}
@@ -79,24 +91,36 @@ export function CarouselClient(props: CarouselPropsTypes) {
                                 key={idx}
                                 onClick={() => handleThumbClick(idx)}
                             >
-                                <Image
-                                    placeholder="blur"
-                                    blurDataURL={slide.type === 'external' ? undefined : getBase64Blur(slide.image)}
-                                    src={imgSrc as string}
-                                    className="size-full object-cover overflow-hidden"
-                                    alt={'Slide'}
-                                    fetchPriority="high"
-                                    loading="lazy"
-                                    height={40}
-                                    width={200}
-                                />
+                                {typeof slide.image === 'string' ? (
+                                    <Image
+                                        placeholder="blur"
+                                        blurDataURL={slide.type === 'external' ? undefined : getBase64Blur(slide.image)}
+                                        src={imgSrc as string}
+                                        className="size-full object-cover overflow-hidden"
+                                        alt={'Slide'}
+                                        fetchPriority="high"
+                                        loading="eager"
+                                        height={40}
+                                        width={200}
+                                    />
+                                ) : (
+                                    <React.Suspense fallback='loading image'>
+                                        <CMSImage
+                                            className="size-full object-cover overflow-hidden"
+                                            height={40}
+                                            width={200}
+                                            alt='Main Slide Image'
+                                            src={typeof slide.image === 'number' ? getMedia(slide.image) : slide.image}
+                                        />
+                                    </React.Suspense>
+                                )}
                             </CarouselItem>
                         )
                     })}
                 </CarouselContent>
                 {/* </div> */}
-                <CarouselPrevious />
-                <CarouselNext />
+                <CarouselPrevious className='left-2' />
+                <CarouselNext className='right-2' />
             </Carousel>
         </div>
     );

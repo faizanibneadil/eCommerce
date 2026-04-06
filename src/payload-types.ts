@@ -304,6 +304,7 @@ export interface Media {
     [k: string]: unknown;
   } | null;
   base64Blur?: string | null;
+  blurDataUrl?: string | null;
   folder?: (number | null) | FolderInterface;
   updatedAt: string;
   createdAt: string;
@@ -1126,6 +1127,7 @@ export interface MediaSelect<T extends boolean = true> {
   alt?: T;
   caption?: T;
   base64Blur?: T;
+  blurDataUrl?: T;
   folder?: T;
   updatedAt?: T;
   createdAt?: T;

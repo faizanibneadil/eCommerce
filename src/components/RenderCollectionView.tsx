@@ -4,6 +4,7 @@ import { CollectionSlug, DataFromCollectionSlug, getPayload } from "payload"
 import config from '@payload-config'
 import { SingleCategory } from "@/collections/Categories/components/SingleCategory"
 import { SingleProduct } from "@/collections/Products/components/SingleProduct"
+import { Spinner } from "./ui/spinner"
 
 export const collectionViewMap: Record<'products' | 'categories', {
     Component: React.ComponentType<DataFromCollectionSlug<'products' | 'categories'>>,
@@ -11,11 +12,19 @@ export const collectionViewMap: Record<'products' | 'categories', {
 }> = {
     categories: {
         Component: SingleCategory,
-        Skeleton: () => <div>Single Category view Skeleton</div>
+        Skeleton: () => (
+            <div className="h-screen flex items-center justify-center gap-4">
+                <Spinner className="size-20" />
+            </div>
+        )
     },
     products: {
         Component: SingleProduct,
-        Skeleton: () => <div>Single Product View Skeleton</div>
+        Skeleton: () => (
+            <div className="h-screen flex items-center justify-center gap-4">
+                <Spinner className="size-20" />
+            </div>
+        )
     }
 }
 
