@@ -59,5 +59,22 @@ export const Settings: GlobalConfig<'settings'> = {
                 }
             ]
         },
+        {
+            type: 'row',
+            fields: [
+                {
+                    type: 'upload',
+                    relationTo: 'media',
+                    name: 'adminLogo',
+                    label: 'Admin Logo',
+                },
+                {
+                    type: 'upload',
+                    relationTo: 'media',
+                    name: 'adminIcon',
+                    label: 'Admin Icon',
+                }
+            ]
+        },
     ]
 }
