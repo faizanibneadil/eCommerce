@@ -4,7 +4,7 @@ import { CMSImage } from "@/components/ui/CMSImage";
 import { Button } from "@/components/ui/button";
 import { useScroll } from "@/hooks/use-scroll";
 import { cn } from "@/lib/utils";
-import { Header, Setting } from "@/payload-types";
+import { Header, Media, Setting } from "@/payload-types";
 import { useAuth } from "@/providers/Auth";
 import { getMedia } from "@/utilities/getMedia";
 import Link from "next/link";
@@ -30,7 +30,7 @@ function formatHref(item: NonNullable<Header['navItems']>[number]) {
 	return url
 }
 
-export function HeaderClient(props: { headerConfig: Header, settingsConfig: Setting }) {
+export function HeaderClient(props: { headerConfig: Header, settingsConfig: Setting, logoSrc: Media }) {
 	const scrolled = useScroll(10);
 	const { user, status } = useAuth()
 	const menu = props.headerConfig?.navItems?.map(item => ({
@@ -57,10 +57,7 @@ export function HeaderClient(props: { headerConfig: Header, settingsConfig: Sett
 					{/* <Logo className="h-4" /> */}
 					<CMSImage
 						alt='logo'
-						src={typeof props?.settingsConfig?.lightLogo === 'number'
-							? getMedia(props?.settingsConfig?.lightLogo)
-							: props?.settingsConfig?.lightLogo
-						}
+						src={props.logoSrc}
 						height={40}
 						width={200}
 						className="h-24 w-20"
