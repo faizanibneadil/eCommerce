@@ -1,14 +1,17 @@
 'use client'
 
-import { cn } from "@/lib/utils"
 import { Media } from "@/payload-types"
-import { getBase64Blur, getMediaUrl } from "@/utilities/getURL"
+import { cssVariables } from '@/utilities/cssVariables'
+import { getShimmerDataUrl } from "@/utilities/getShimmerEffect"
+import { getMediaUrl } from "@/utilities/getURL"
 import Image, { ImageProps } from "next/image"
-import { use, useState } from "react"
+import { use } from "react"
+
+const { breakpoints } = cssVariables
 
 type Props = Omit<ImageProps, 'src'> & { src: Media | Promise<Media> | null | undefined }
 export const CMSImage: React.FC<Props> = (props) => {
-    const [loaded, setLoading] = useState(false)
+    // const [loaded, setLoading] = useState(false)
 
     if (!props.src) {
         return null
@@ -16,20 +19,28 @@ export const CMSImage: React.FC<Props> = (props) => {
 
     const media = props.src instanceof Promise ? use(props.src) : props.src
 
+    const _width = !props.fill ? props.width ?? media?.width! : undefined
+    const _height = !props.fill ? props.height ?? media?.height! : undefined
+    const _sizes = props.sizes
+        ? props.sizes
+        : Object.entries(breakpoints)
+            .map(([, value]) => `(max-width: ${value}px) ${value * 2}w`)
+            .join(', ')
+
     return <Image
-        property='lazy'
-        loading='eager'
-        width={!props.fill ? props.width ?? media?.width! : undefined}
-        height={!props.fill ? props.height ?? media?.height! : undefined}
+        loading='lazy'
+        width={_width}
+        height={_height}
         placeholder='blur'
-        blurDataURL={getBase64Blur(media)}
-        onLoad={() => setLoading(true)}
-        style={{
-            filter: loaded ? 'blur(0px)' : 'blur(10px)',
-            transition: loaded ? `filter 500ms ease-in-out` : undefined,
-            // objectFit: 'cover',
-            // objectPosition: 'center',
-        }}
+        sizes={_sizes}
+        blurDataURL={getShimmerDataUrl(_width, _height)}
+        // onLoad={() => setLoading(true)}
+        // style={{
+        //     filter: loaded ? 'blur(0px)' : 'blur(1px)',
+        //     transition: loaded ? `filter 500ms ease-in-out` : undefined,
+        //     // objectFit: 'cover',
+        //     // objectPosition: 'center',
+        // }}
         {...props}
         // className={cn('object-center object-cover', props.className)}
         src={getMediaUrl(media)}

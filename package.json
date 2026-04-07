@@ -8,6 +8,8 @@
     "build": "cross-env NODE_OPTIONS=--no-deprecation next build",
     "dev": "cross-env NODE_OPTIONS=--no-deprecation next dev --no-server-fast-refresh",
     "devsafe": "rm -rf .next && cross-env NODE_OPTIONS=--no-deprecation next dev --no-server-fast-refresh",
+    "dev:https": "cross-env NODE_OPTIONS=--no-deprecation next dev --experimental-https --no-server-fast-refresh",
+    "devsafe:https": "rm -rf .next && cross-env NODE_OPTIONS=--no-deprecation next dev --experimental-https --no-server-fast-refresh",
     "generate:importmap": "cross-env NODE_OPTIONS=--no-deprecation payload generate:importmap",
     "generate:types": "cross-env NODE_OPTIONS=--no-deprecation payload generate:types",
     "lint": "cross-env NODE_OPTIONS=--no-deprecation next lint",

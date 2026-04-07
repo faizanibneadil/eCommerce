@@ -10,10 +10,11 @@ import {
     CarouselPrevious,
 } from "@/components/ui/carousel";
 import { CarouselPropsTypes } from "@/payload-types";
-import { getBase64Blur, getMediaUrl } from "@/utilities/getURL";
+import { getMediaUrl } from "@/utilities/getURL";
 import Image from "next/image";
 import { CMSImage } from "@/components/ui/CMSImage";
 import { getMedia } from "@/utilities/getMedia";
+import { getShimmerDataUrl } from "@/utilities/getShimmerEffect";
 
 export function CarouselClient(props: CarouselPropsTypes) {
     const [api, setApi] = React.useState<CarouselApi>();
@@ -93,8 +94,8 @@ export function CarouselClient(props: CarouselPropsTypes) {
                             >
                                 {typeof slide.image === 'string' ? (
                                     <Image
-                                        placeholder="blur"
-                                        blurDataURL={slide.type === 'external' ? undefined : getBase64Blur(slide.image)}
+                                        // placeholder="blur"
+                                        // blurDataURL={slide.type === 'external' ? undefined : getShimmerDataUrl()}
                                         src={imgSrc as string}
                                         className="size-full object-cover overflow-hidden"
                                         alt={'Slide'}
