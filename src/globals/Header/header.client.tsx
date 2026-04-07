@@ -11,6 +11,8 @@ import { ShoppingCart } from "./ShoppingCart";
 import Image from "next/image";
 import { useAuth } from "@/providers/Auth";
 import { UserMenu } from "./UserMenu";
+import { CMSImage } from "@/components/ui/CMSImage";
+import { getMedia } from "@/utilities/getMedia";
 
 
 function formatHref(item: NonNullable<Header['navItems']>[number]) {
@@ -40,6 +42,8 @@ export function HeaderClient(props: { headerConfig: Header, settingsConfig: Sett
 		newTabProps: item?.newTab ? { rel: 'noopener noreferrer', target: '_blank' } : {}
 	}))
 
+	console.log(props.settingsConfig.lightLogo)
+
 	return (
 		<header
 			className={cn("sticky top-0 z-50 mx-auto w-full max-w-4xl border-transparent border-b md:rounded-md md:border md:transition-all md:ease-out", {
@@ -56,17 +60,27 @@ export function HeaderClient(props: { headerConfig: Header, settingsConfig: Sett
 					href="#"
 				>
 					{/* <Logo className="h-4" /> */}
-					<Image
+					<CMSImage
+						alt='logo'
+						src={typeof props?.settingsConfig?.lightLogo === 'number'
+							? getMedia(props?.settingsConfig?.lightLogo)
+							: props?.settingsConfig?.lightLogo
+						}
+						height={40}
+						width={200}
+						className="h-24 w-20"
+					/>
+					{/* <Image
 						placeholder="blur"
 						blurDataURL={getBase64Blur(props?.settingsConfig?.lightLogo)}
-						src={getMediaUrl(props?.settingsConfig?.lightLogo)}
+						src={props?.settingsConfig?.lightLogo}
 						className="h-24 w-20"
 						alt='Logo'
 						fetchPriority="high"
 						loading="lazy"
 						height={40}
 						width={200}
-					/>
+					/> */}
 				</a>
 				<div className="hidden items-center gap-2 md:flex">
 					<div>
