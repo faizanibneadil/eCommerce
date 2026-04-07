@@ -1725,6 +1725,8 @@ export interface Setting {
    * The Favicon.
    */
   favicon?: (number | null) | Media;
+  adminLogo?: (number | null) | Media;
+  adminIcon?: (number | null) | Media;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -1777,6 +1779,8 @@ export interface SettingsSelect<T extends boolean = true> {
   lightLogo?: T;
   og?: T;
   favicon?: T;
+  adminLogo?: T;
+  adminIcon?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

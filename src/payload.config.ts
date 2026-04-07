@@ -35,6 +35,12 @@ const dirname = path.dirname(filename)
 export default buildConfig({
   admin: {
     user: Users.slug,
+    components: {
+      graphics: {
+        Icon: '@/graphics/Icon/index.tsx#Icon',
+        Logo: '@/graphics/Logo/index.tsx#Logo'
+      }
+    }
   },
   folders: {
     // debug: true,
