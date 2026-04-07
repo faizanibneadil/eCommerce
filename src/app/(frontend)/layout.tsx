@@ -41,6 +41,7 @@ const twitterSite = TWITTER_SITE ? ensureStartsWith(TWITTER_SITE, 'https://') : 
     }),
 } */
 
+
 export default async function RootLayout({ children }: React.PropsWithChildren) {
   const { isEnabled: draft } = await draftMode()
   return (
@@ -52,6 +53,7 @@ export default async function RootLayout({ children }: React.PropsWithChildren) 
     >
       <head>
         <InitTheme />
+        <meta httpEquiv='Accept-CH' content='Sec-CH-Width, Sec-CH-DPR, Sec-Ch-Viewport-Width, Width, DPR, Viewport-Width, Save-Data, ECT, RTT, Downlink' />
         <link href="/favicon.ico" rel="icon" sizes="32x32" />
         <link href="/favicon.svg" rel="icon" type="image/svg+xml" />
       </head>

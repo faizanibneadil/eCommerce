@@ -1,18 +1,15 @@
 "use client";
-import { cn } from "@/lib/utils";
-import { Logo } from "@/components/logo";
-import { useScroll } from "@/hooks/use-scroll";
-import { Button } from "@/components/ui/button";
 import { MobileNav } from "@/components/mobile-nav";
-import { Header, Setting } from "@/payload-types";
-import Link from "next/link";
-import { getBase64Blur, getMediaUrl } from "@/utilities/getURL";
-import { ShoppingCart } from "./ShoppingCart";
-import Image from "next/image";
-import { useAuth } from "@/providers/Auth";
-import { UserMenu } from "./UserMenu";
 import { CMSImage } from "@/components/ui/CMSImage";
+import { Button } from "@/components/ui/button";
+import { useScroll } from "@/hooks/use-scroll";
+import { cn } from "@/lib/utils";
+import { Header, Setting } from "@/payload-types";
+import { useAuth } from "@/providers/Auth";
 import { getMedia } from "@/utilities/getMedia";
+import Link from "next/link";
+import { ShoppingCart } from "./ShoppingCart";
+import { UserMenu } from "./UserMenu";
 
 
 function formatHref(item: NonNullable<Header['navItems']>[number]) {
@@ -41,8 +38,6 @@ export function HeaderClient(props: { headerConfig: Header, settingsConfig: Sett
 		href: formatHref(item),
 		newTabProps: item?.newTab ? { rel: 'noopener noreferrer', target: '_blank' } : {}
 	}))
-
-	console.log(props.settingsConfig.lightLogo)
 
 	return (
 		<header
