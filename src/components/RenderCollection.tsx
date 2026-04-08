@@ -10,12 +10,34 @@ import { DecoratedBox } from "./DecoratedBox"
 import { ProductCard } from "./ProductCard"
 import { CMSImage } from "./ui/CMSImage"
 import { ProductSkeleton } from "./ProductCard/ProductSkeleton"
+import { Metadata } from "next"
+import { Page } from "@/payload-types"
+import { queryCollectionBySlug } from "@/utilities/queryCollectionBySlug"
+import { getMediaUrl } from "@/utilities/getURL"
 
 export const collectionMap: Record<'products' | 'categories', {
     Component: React.ComponentType<PaginatedDocs<DataFromCollectionSlug<'products' | 'categories'>>>,
-    Skeleton: React.ComponentType<{ totalDocs?: number }>
+    Skeleton: React.ComponentType<{ totalDocs?: number }>,
+    metadata: (props: {
+        doc: Page
+    }) => Promise<Metadata> | Metadata
 }> = {
     products: {
+        metadata: ({ doc }) => {
+            return {
+                title: doc?.meta?.title || doc?.title,
+                description: doc?.meta?.description || doc?.title,
+                openGraph: {
+                    title: doc?.meta?.title || doc?.title,
+                    description: doc?.meta?.description || doc?.title,
+                    ...(doc?.meta?.image && {
+                        images: {
+                            url: getMediaUrl(doc?.meta?.image)
+                        }
+                    })
+                }
+            }
+        },
         Component: (props: PaginatedDocs<DataFromCollectionSlug<'products'>>) => {
             return (
                 <DecoratedBox>
@@ -49,6 +71,21 @@ export const collectionMap: Record<'products' | 'categories', {
         )
     },
     categories: {
+        metadata: ({ doc }) => {
+            return {
+                title: doc?.meta?.title || doc?.title,
+                description: doc?.meta?.description || doc?.title,
+                openGraph: {
+                    title: doc?.meta?.title || doc?.title,
+                    description: doc?.meta?.description || doc?.title,
+                    ...(doc?.meta?.image && {
+                        images: {
+                            url: getMediaUrl(doc?.meta?.image)
+                        }
+                    })
+                }
+            }
+        },
         Component: (props: PaginatedDocs<DataFromCollectionSlug<'categories'>>) => {
             return (
                 <DecoratedBox>
@@ -117,30 +154,4 @@ export const RenderCollection: React.FC<{
 
     return null
 
-}
-
-
-const queryCollectionBySlug = async ({ collectionSlug }: { collectionSlug: CollectionSlug }) => {
-    const { isEnabled: draft } = await draftMode()
-
-    const payload = await getPayload({ config })
-
-    const result = await payload.find({
-        collection: collectionSlug,
-        draft,
-        overrideAccess: draft,
-        pagination: true,
-        where: {
-            and: [
-                // {
-                //     slug: {
-                //         equals: slug,
-                //     },
-                // },
-                ...(draft ? [] : [{ _status: { equals: 'published' } }]),
-            ],
-        },
-    })
-
-    return result
 }
