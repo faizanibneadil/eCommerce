@@ -1,6 +1,7 @@
 import { sqliteAdapter } from '@payloadcms/db-sqlite'
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import sharp from 'sharp'
+import { redisKVAdapter } from '@payloadcms/kv-redis'
 
 import {
   BoldFeature,
@@ -14,7 +15,7 @@ import {
   lexicalEditor,
 } from '@payloadcms/richtext-lexical'
 import path from 'path'
-import { TextField, buildConfig } from 'payload'
+import { TextField, buildConfig, databaseKVAdapter } from 'payload'
 import { fileURLToPath } from 'url'
 
 import { Categories } from '@/collections/Categories'
@@ -33,6 +34,7 @@ const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
 export default buildConfig({
+  kv: databaseKVAdapter(),
   admin: {
     user: Users.slug,
     components: {

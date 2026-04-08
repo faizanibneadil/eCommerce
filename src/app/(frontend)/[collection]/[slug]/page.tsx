@@ -1,12 +1,68 @@
-import { PayloadRedirects } from "@/components/PayloadRedirects"
-import { RenderBlocks } from "@/components/RenderBlocks"
-import { RenderCollection, collectionMap } from "@/components/RenderCollection"
-import { RenderCollectionView, collectionViewMap } from "@/components/RenderCollectionView"
-import config from '@payload-config'
-import { draftMode } from "next/headers"
-import { notFound } from "next/navigation"
-import { CollectionSlug, getPayload } from "payload"
-import { Suspense } from "react"
+import { PayloadRedirects } from "@/components/PayloadRedirects";
+import { RenderBlocks } from "@/components/RenderBlocks";
+import { RenderCollection, collectionMap } from "@/components/RenderCollection";
+import { RenderCollectionView, collectionViewMap } from "@/components/RenderCollectionView";
+import { getMediaUrl } from "@/utilities/getURL";
+import { queryCollectionCountBySlug } from "@/utilities/queryCollectionCountBySlug";
+import { queryCollectionViewBySlug } from "@/utilities/queryCollectionViewBySlug";
+import { queryPageBySlug } from '@/utilities/queryPageBySlug';
+import type { Metadata } from 'next';
+import { notFound } from "next/navigation";
+import { CollectionSlug } from "payload";
+import { Suspense } from "react";
+
+export const generateMetadata = async (props: {
+    params: Promise<{
+        collection: CollectionSlug,
+        slug: string
+    }>
+}): Promise<Metadata> => {
+    const params = await props.params
+
+    let page = await queryPageBySlug({
+        slug: params.slug
+    })
+
+    if (!page && !params.slug && !params.collection) {
+        return {
+            title: 'Not Found'
+        }
+    }
+
+    if (page?.enableCollection && page?.configuredCollectionSlug) {
+        page = await queryPageBySlug({
+            slug: page?.configuredCollectionSlug as CollectionSlug
+        })
+    }
+
+    if (!page && params.collection in collectionViewMap) {
+        const doc = await queryCollectionViewBySlug({
+            collection: params.collection,
+            slug: params.slug
+        })
+        const metadata = collectionViewMap[params.collection as 'products' | 'categories'].metadata
+
+        if (typeof metadata === 'function') {
+            // @ts-expect-error
+            return await metadata({ doc })
+        }
+    }
+
+    // Fallback Page Metadata
+    return {
+        title: page?.meta?.title || page?.title,
+        description: page?.meta?.description || page?.title,
+        openGraph: {
+            title: page?.meta?.title || page?.title,
+            description: page?.meta?.description || page?.title,
+            ...(page?.meta?.image && {
+                images: {
+                    url: getMediaUrl(page?.meta?.image)
+                }
+            })
+        }
+    }
+};
 
 
 export default async function Page(props: { params: Promise<{ collection: CollectionSlug, slug: string }> }) {
@@ -20,13 +76,16 @@ export default async function Page(props: { params: Promise<{ collection: Collec
     }
 
     if (page?.enableCollection) {
-        const Skeleton = collectionMap[params.collection as 'products' | 'categories'].Skeleton || (() => null)
+        const queryCount = await queryCollectionCountBySlug({
+            collectionSlug: page?.configuredCollectionSlug as CollectionSlug
+        })
+        const Skeleton = collectionMap[params.collection as 'products' | 'categories']?.Skeleton || (() => null)
         return (
             <>
-                <Suspense fallback='Redirecting ...'>
+                <Suspense fallback={null}>
                     <PayloadRedirects url={`/${params.collection}/${params.slug}`} />
                 </Suspense>
-                <Suspense fallback={<Skeleton />}>
+                <Suspense fallback={<Skeleton totalDocs={queryCount?.totalDocs} />}>
                     <RenderCollection collectionSlug={page?.configuredCollectionSlug as any} />
                 </Suspense>
             </>
@@ -37,11 +96,11 @@ export default async function Page(props: { params: Promise<{ collection: Collec
         return <RenderBlocks blocks={page?.layout} />
     }
 
-    const Skeleton = collectionViewMap[params.collection as 'products' | 'categories'].Skeleton || (() => null)
+    const Skeleton = collectionViewMap[params.collection as 'products' | 'categories']?.Skeleton || (() => null)
 
     return (
         <>
-            <Suspense fallback='Redirecting ...'>
+            <Suspense fallback={null}>
                 <PayloadRedirects url={`/${params.collection}/${params.slug}`} />
             </Suspense>
             <Suspense fallback={<Skeleton />}>
@@ -50,34 +109,3 @@ export default async function Page(props: { params: Promise<{ collection: Collec
         </>
     )
 }
-
-
-
-
-const queryPageBySlug = async ({ slug }: { slug: string }) => {
-    const { isEnabled: draft } = await draftMode()
-
-    const payload = await getPayload({ config })
-
-    const result = await payload.find({
-        collection: 'pages',
-        draft,
-        limit: 1,
-        overrideAccess: draft,
-        pagination: false,
-        where: {
-            and: [
-                {
-                    slug: {
-                        equals: slug,
-                    },
-                },
-                ...(draft ? [] : [{ _status: { equals: 'published' } }]),
-            ],
-        },
-    })
-
-    return result.docs?.[0] || null
-}
-
-

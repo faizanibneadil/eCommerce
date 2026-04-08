@@ -454,6 +454,14 @@ export interface Category {
     hasNextPage?: boolean;
     totalDocs?: number;
   };
+  meta?: {
+    title?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (number | null) | Media;
+    description?: string | null;
+  };
   /**
    * When enabled, the slug will auto-generate from the title field on save and autosave.
    */
@@ -1144,6 +1152,13 @@ export interface CategoriesSelect<T extends boolean = true> {
   title?: T;
   image?: T;
   products?: T;
+  meta?:
+    | T
+    | {
+        title?: T;
+        image?: T;
+        description?: T;
+      };
   generateSlug?: T;
   slug?: T;
   parent?: T;
