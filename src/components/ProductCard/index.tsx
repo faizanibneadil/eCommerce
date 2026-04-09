@@ -50,7 +50,7 @@ export const ProductCard: React.FC<{
         }
 
         return (
-            <div className="flex flex-col mx-auto md:max-w-xs">
+            <div className="flex flex-col  md:max-w-xs">
                 <div className="">
                     <Carousel className="w-full group" setApi={setSlidesApi} opts={{ loop: true }}>
                         <CarouselContent className="md:aspect-square">

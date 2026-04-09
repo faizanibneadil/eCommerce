@@ -51,4 +51,6 @@ export const PayloadRedirects: React.FC<Props> = async ({
     }
 
     // notFound()
+
+    return null
 }

@@ -36,7 +36,7 @@ export function CarouselClient(props: CarouselPropsTypes) {
     );
 
     return (
-        <div className="mx-auto w-full">
+        <div className=" w-full">
             <Carousel className="w-full" setApi={setApi} plugins={[
                 Autoplay({
                     delay: 2000,
