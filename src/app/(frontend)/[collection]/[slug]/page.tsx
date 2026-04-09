@@ -66,13 +66,14 @@ export const generateMetadata = async (props: {
 
 
 export default async function Page(props: { params: Promise<{ collection: CollectionSlug, slug: string }> }) {
+    // return null
     const params = await props.params
     const page = await queryPageBySlug({
         slug: params.slug
     })
 
     if (!page && !params.slug && !params.collection) {
-        notFound()
+        return notFound()
     }
 
     if (page?.enableCollection) {

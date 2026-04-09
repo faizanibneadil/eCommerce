@@ -59,7 +59,7 @@ export default async function RootLayout({ children }: React.PropsWithChildren) 
       </head>
       <body>
         <Providers>
-          <AdminBar />
+          {/* <AdminBar /> */}
           {draft && <LivePreviewListener />}
           <div className="relative flex min-h-screen flex-col px-0 md:px-4">
             <Header />

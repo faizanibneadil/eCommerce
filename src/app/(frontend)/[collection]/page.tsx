@@ -47,13 +47,13 @@ export default async function Page(props: {
     const Skeleton = collectionMap[params.collection as 'products' | 'categories']?.Skeleton || (() => null)
 
     return (
-        <>
+        <div>
             <Suspense fallback={null}>
                 <PayloadRedirects url={`/${params.collection}`} />
             </Suspense>
             <Suspense fallback={<Skeleton totalDocs={queryCount.totalDocs} />}>
                 <RenderCollection collectionSlug={params.collection as any} />
             </Suspense>
-        </>
+        </div>
     )
 }

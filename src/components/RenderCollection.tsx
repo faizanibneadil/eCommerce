@@ -40,17 +40,17 @@ export const collectionMap: Record<'products' | 'categories', {
         },
         Component: (props: PaginatedDocs<DataFromCollectionSlug<'products'>>) => {
             return (
-                <DecoratedBox>
-                    <div className="grid grid-cols-2 border md:grid-cols-4 gap-px">
-                        {props?.docs?.map(product => {
-                            return (
-                                <Suspense key={product.id} fallback={<ProductSkeleton />}>
-                                    <ProductCard product={product} />
-                                </Suspense>
-                            )
-                        })}
-                    </div>
-                </DecoratedBox>
+                // <DecoratedBox>
+                <div className="grid grid-cols-2 border md:grid-cols-4 gap-px">
+                    {props?.docs?.map(product => {
+                        return (
+                            <Suspense key={product.id} fallback={<ProductSkeleton />}>
+                                <ProductCard product={product} />
+                            </Suspense>
+                        )
+                    })}
+                </div>
+                // </DecoratedBox>
             )
         },
         Skeleton: ({ totalDocs = 4 }) => (
