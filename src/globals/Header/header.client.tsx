@@ -37,8 +37,8 @@ export function HeaderClient(props: { headerConfig: Header, settingsConfig: Sett
 
 	return (
 		<header
-			className={cn("sticky top-0 z-10 mx-auto w-full max-w-4xl border-transparent border-b md:rounded-md md:border md:transition-all md:ease-out", {
-				"border-border bg-background/95 md:top-2 md:max-w-3xl md:shadow": scrolled,
+			className={cn("sticky  z-10 mx-auto w-full max-w-4xl border-transparent border-b md:rounded-md md:border md:transition-all md:ease-out", {
+				"border-border bg-background/95 top-2.5 md:max-w-3xl md:shadow": scrolled,
 			})}
 		>
 			<nav
