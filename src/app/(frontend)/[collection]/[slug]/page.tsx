@@ -52,6 +52,9 @@ export const generateMetadata = async (props: {
     return {
         title: page?.meta?.title || page?.title,
         description: page?.meta?.description || page?.title,
+        ...(page?.meta?.image && {
+            icons: [{ url: getMediaUrl(page?.meta?.image) }]
+        }),
         openGraph: {
             title: page?.meta?.title || page?.title,
             description: page?.meta?.description || page?.title,

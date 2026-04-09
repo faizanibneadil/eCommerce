@@ -27,6 +27,9 @@ export const collectionMap: Record<'products' | 'categories', {
             return {
                 title: doc?.meta?.title || doc?.title,
                 description: doc?.meta?.description || doc?.title,
+                ...(doc?.meta?.image && {
+                    icons: [{ url: getMediaUrl(doc?.meta?.image) }]
+                }),
                 openGraph: {
                     title: doc?.meta?.title || doc?.title,
                     description: doc?.meta?.description || doc?.title,
@@ -75,6 +78,9 @@ export const collectionMap: Record<'products' | 'categories', {
             return {
                 title: doc?.meta?.title || doc?.title,
                 description: doc?.meta?.description || doc?.title,
+                ...(doc?.meta?.image && {
+                    icons: [{ url: getMediaUrl(doc?.meta?.image) }]
+                }),
                 openGraph: {
                     title: doc?.meta?.title || doc?.title,
                     description: doc?.meta?.description || doc?.title,
