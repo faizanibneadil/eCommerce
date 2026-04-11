@@ -1,4 +1,5 @@
 'use client'
+import { DecoratedBox } from "@/components/DecoratedBox";
 import { CMSImage } from "@/components/ui/CMSImage";
 import {
     Carousel,
@@ -28,56 +29,51 @@ export function CarouselClient(props: CarouselPropsTypes) {
         });
     }, [api]);
 
-    const handleThumbClick = React.useCallback(
-        (index: number) => {
-            api?.scrollTo(index);
-        },
-        [api]
-    );
-
     return (
-        <div className=" w-full">
-            <Carousel className="w-full" setApi={setApi} plugins={[
-                Autoplay({
-                    delay: 2000,
-                }),
-            ]} opts={{
-                loop: true
-            }}>
-                <CarouselContent>
-                    {props?.slides?.map((slide, idx) => {
-                        const media = slide.type === 'external'
-                            ? slide.url && slide.url
-                            : slide.image
-                        return (
-                            <CarouselItem key={`${slide.id}.${idx}`} className="h-98">
-                                {typeof media === 'string' ? (
-                                    <Image
-                                        src={media as string}
-                                        className="size-full object-cover overflow-hidden"
-                                        alt={'Slide'}
-                                        fetchPriority="high"
-                                        loading="eager"
-                                        height={40}
-                                        width={200}
-                                    />
-                                ) : (
-                                    <React.Suspense fallback='loading image'>
-                                        <CMSImage
-                                            className="size-full object-cover overflow-hidden"
+        <DecoratedBox>
+            <div className=" w-full">
+                <Carousel className="w-full" setApi={setApi} plugins={[
+                    Autoplay({
+                        delay: 2000,
+                    }),
+                ]} opts={{
+                    loop: true
+                }}>
+                    <CarouselContent>
+                        {props?.slides?.map((slide, idx) => {
+                            const media = slide.type === 'external'
+                                ? slide.url && slide.url
+                                : slide.image
+                            return (
+                                <CarouselItem key={`${slide.id}.${idx}`} className="h-98">
+                                    {typeof media === 'string' ? (
+                                        <Image
+                                            src={media as string}
+                                            className="w-full"
+                                            alt={'Slide'}
+                                            fetchPriority="high"
+                                            loading="eager"
                                             height={40}
                                             width={200}
-                                            alt='Main Slide Image'
-                                            src={typeof media === 'number' ? getMedia(media) : media}
                                         />
-                                    </React.Suspense>
-                                )}
-                            </CarouselItem>
-                        )
-                    })}
-                </CarouselContent>
-            </Carousel>
-        </div>
+                                    ) : (
+                                        <React.Suspense fallback='loading image'>
+                                            <CMSImage
+                                                className="w-full"
+                                                height={40}
+                                                width={200}
+                                                alt='Main Slide Image'
+                                                src={typeof media === 'number' ? getMedia(media) : media}
+                                            />
+                                        </React.Suspense>
+                                    )}
+                                </CarouselItem>
+                            )
+                        })}
+                    </CarouselContent>
+                </Carousel>
+            </div>
+        </DecoratedBox>
     );
 
 }
