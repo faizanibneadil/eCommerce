@@ -6,13 +6,17 @@ import { notFound } from "next/navigation"
 import { CollectionSlug, DataFromCollectionSlug } from "payload"
 import { Spinner } from "./ui/spinner"
 import { getMediaUrl } from "@/utilities/getURL"
+import type { Product, WithContext } from 'schema-dts';
 
 export const collectionViewMap: Record<'products' | 'categories', {
     Component: React.ComponentType<DataFromCollectionSlug<'products' | 'categories'>>,
     Skeleton: React.ComponentType<any>,
     metadata: (props: {
         doc: DataFromCollectionSlug<'products' | 'categories'>
-    }) => Promise<Metadata> | Metadata
+    }) => Promise<Metadata> | Metadata,
+    JsonLdSchemas?: (props: {
+        doc: DataFromCollectionSlug<'products' | 'categories'>
+    }) => any[]
 }> = {
     categories: {
         Component: SingleCategory,
@@ -41,6 +45,41 @@ export const collectionViewMap: Record<'products' | 'categories', {
         )
     },
     products: {
+        JsonLdSchemas: ({ doc }: { doc: DataFromCollectionSlug<"products"> }) => {
+            const hasStock = doc?.enableVariants
+                ? doc?.variants?.docs?.some((variant) => {
+                    if (typeof variant !== 'object') return false
+                    return variant.inventory && variant?.inventory > 0
+                })
+                : doc?.inventory! > 0
+            let price = doc.priceInPKR
+
+            if (doc.enableVariants && doc?.variants?.docs?.length) {
+                price = doc?.variants?.docs?.reduce((acc, variant) => {
+                    if (typeof variant === 'object' && variant?.priceInPKR && acc && variant?.priceInPKR > acc) {
+                        return variant.priceInPKR
+                    }
+                    return acc
+                }, price)
+            }
+
+            const productSchema: WithContext<Product> = {
+                "@context": 'https://schema.org',
+                "@type": 'Product',
+                description: doc?.meta?.description ?? doc?.title,
+                name: doc?.meta?.title ?? doc?.title,
+                ...(doc?.meta?.image && typeof doc?.meta?.image === 'object' && {
+                    image: typeof doc?.meta?.image === 'object' ? getMediaUrl(doc?.meta?.image) : undefined
+                }),
+                offers: {
+                    "@type": 'AggregateOffer',
+                    availability: hasStock ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+                    price: price ?? undefined,
+                    priceCurrency: 'pkr',
+                }
+            }
+            return [productSchema]
+        },
         Component: SingleProduct,
         metadata: ({ doc }) => {
             return {
@@ -77,12 +116,29 @@ export const RenderCollectionView: React.FC<{
         slug: props.slug
     })
 
-    if (!collectionView) {
+    if (!collectionView || !Object.keys(collectionViewMap).includes(props.collectionSlug)) {
         return notFound()
     }
 
     const View = collectionViewMap[props.collectionSlug as 'products' | 'categories']?.Component || (() => null)
+    const JsonLdSchemas = collectionViewMap[props.collectionSlug as 'products' | 'categories']?.JsonLdSchemas || (() => [])
 
     // @ts-expect-error
-    return <View {...collectionView} />
+    const schemas = JsonLdSchemas?.({ doc: collectionView }) ?? []
+
+    return (
+        <>
+            {schemas?.map((schema, idx) => (
+                <script
+                    key={`json-lg-schema-${idx}`}
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{
+                        __html: JSON.stringify(schema).replace(/</g, '\\u003c'),
+                    }}
+                />
+            ))}
+            {/* @ts-expect-error */}
+            <View {...collectionView} />
+        </>
+    )
 }
