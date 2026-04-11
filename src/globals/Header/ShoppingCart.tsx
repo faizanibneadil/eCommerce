@@ -31,7 +31,7 @@ export function ShoppingCart() {
           {totalQuantity ? (
             <>
               <span>{totalQuantity}</span>
-              <span>items</span>
+              <span className="hidden md:block">items</span>
             </>
           ) : null}
         </Button>
@@ -154,7 +154,7 @@ export function ShoppingCart() {
 
                     {/* Footer Section */}
                     {cart?.items && cart.items.length > 0 && (
-                      <div className="border-t border-gray-200 px-6 py-6 bg-white md:rounded-bl-xl">
+                      <div className="sticky bottom-0 z-50 border-t border-gray-200 px-6 py-6 bg-white md:rounded-bl-xl">
                         {typeof cart?.subtotal === 'number' && (
                           <div className="flex justify-between text-base font-semibold mb-4">
                             <p>Total</p>

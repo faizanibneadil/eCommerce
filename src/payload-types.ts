@@ -606,6 +606,14 @@ export interface Transaction {
         id?: string | null;
       }[]
     | null;
+  paymentMethod?: 'cod' | null;
+  cod?: {
+    orderID?: string | null;
+    validationStatus?: ('pending' | 'validated' | 'rejected') | null;
+    deliveryStatus?: ('preparing' | 'dispatched' | 'out_for_delivery' | 'delivered' | 'returned') | null;
+    paymentCollected?: boolean | null;
+    collectionDate?: string | null;
+  };
   billingAddress?: {
     title?: string | null;
     firstName?: string | null;
@@ -708,7 +716,8 @@ export interface Address {
     | 'SI'
     | 'ES'
     | 'SE'
-    | 'CH';
+    | 'CH'
+    | 'PK';
   phone?: string | null;
   updatedAt: string;
   createdAt: string;
@@ -1594,6 +1603,16 @@ export interface TransactionsSelect<T extends boolean = true> {
         variant?: T;
         quantity?: T;
         id?: T;
+      };
+  paymentMethod?: T;
+  cod?:
+    | T
+    | {
+        orderID?: T;
+        validationStatus?: T;
+        deliveryStatus?: T;
+        paymentCollected?: T;
+        collectionDate?: T;
       };
   billingAddress?:
     | T

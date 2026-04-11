@@ -27,7 +27,7 @@ export default function UserMenuDrawer() {
 
     return (
         <Drawer.Root open={open} onOpenChange={setOpen}>
-            <Drawer.Trigger nativeButton={false} render={
+            <Drawer.Trigger render={
                 <Button onClick={() => setOpen(true)} className='cursor-pointer rounded-full' variant="outline" size="icon-lg">
                     <UserIcon className="size-4.5" />
                 </Button>
