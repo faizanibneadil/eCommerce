@@ -1,14 +1,14 @@
 'use client'
-import { AtSignIcon, Fingerprint } from "lucide-react"
-import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from "../ui/input-group"
-import { Button } from "../ui/button"
-import Link from "next/link"
-import { useForm } from 'react-hook-form'
 import { useAuth } from "@/providers/Auth"
-import { useCallback, useEffect, useState } from "react"
+import { AtSignIcon, Fingerprint } from "lucide-react"
+import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { Field, FieldDescription } from "../ui/field"
+import { useCallback, useState } from "react"
+import { useForm } from 'react-hook-form'
 import { FormError } from "../FormError"
+import { Button } from "../ui/button"
+import { Field, FieldDescription } from "../ui/field"
+import { InputGroup, InputGroupAddon, InputGroupInput } from "../ui/input-group"
 
 type FormData = {
     email: string
@@ -21,7 +21,7 @@ export const LoginForm: React.FC = () => {
     const [error, setError] = useState<null | string>(null)
 
     const {
-        formState: { errors, isLoading },
+        formState: { errors, isLoading, isSubmitting },
         handleSubmit,
         register,
     } = useForm<FormData>()
@@ -75,8 +75,8 @@ export const LoginForm: React.FC = () => {
                 </FieldDescription>)}
             </Field>
 
-            <Button className="w-full cursor-pointer" size="lg" type="submit">
-                Continue
+            <Button disabled={isLoading || isSubmitting} className="w-full cursor-pointer" size="lg" type="submit">
+                {(isLoading || isSubmitting) ? 'Signing in ...' : 'Continue'}
             </Button>
             <Button nativeButton={false} render={<Link href='/create-account' />} variant='link' className="w-full cursor-pointer" size="lg" type="button">
                 Create an account
