@@ -55,6 +55,8 @@ export default buildConfig({
   collections: [Users, Pages, Categories, Media],
   globals: [Header, Footer, Settings],
   blocks: [ProductsBlock, CategoriesBlock, CarouselBlock],
+  cors: [process.env.NEXT_PUBLIC_SERVER_URL!].filter(Boolean),
+  csrf: [process.env.NEXT_PUBLIC_SERVER_URL!].filter(Boolean),
   db: postgresAdapter({
     blocksAsJSON: true,
     pool: {
