@@ -1,14 +1,14 @@
 'use client'
-import { AtSignIcon, Fingerprint } from "lucide-react"
-import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from "../ui/input-group"
-import { Button } from "../ui/button"
-import Link from "next/link"
-import { useForm } from 'react-hook-form'
 import { useAuth } from "@/providers/Auth"
-import { useCallback, useEffect, useState } from "react"
+import { AtSignIcon, Fingerprint } from "lucide-react"
+import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { Field, FieldDescription } from "../ui/field"
+import { useCallback, useState } from "react"
+import { useForm } from 'react-hook-form'
 import { FormError } from "../FormError"
+import { Button } from "../ui/button"
+import { Field, FieldDescription } from "../ui/field"
+import { InputGroup, InputGroupAddon, InputGroupInput } from "../ui/input-group"
 
 type FormData = {
     email: string
@@ -17,13 +17,12 @@ type FormData = {
 }
 
 export const RegisterForm: React.FC = () => {
-    const { login, user, status, create } = useAuth()
+    const { login } = useAuth()
     const router = useRouter()
     const [error, setError] = useState<null | string>(null)
-    const [loading, setLoading] = useState(false)
 
     const {
-        formState: { errors },
+        formState: { errors, isLoading, isSubmitting },
         handleSubmit,
         register,
         watch,
@@ -44,16 +43,10 @@ export const RegisterForm: React.FC = () => {
             return
         }
 
-        const timer = setTimeout(() => {
-            setLoading(true)
-        }, 1000)
-
         try {
             await login(data)
-            clearTimeout(timer)
             router.replace('/')
         } catch (_) {
-            clearTimeout(timer)
             setError('There was an error with the credentials provided. Please try again.')
         }
     }, [login, router])
@@ -116,8 +109,8 @@ export const RegisterForm: React.FC = () => {
                 </FieldDescription>)}
             </Field>
 
-            <Button className="w-full cursor-pointer" size="sm" type="submit">
-                {loading ? 'Processing' : 'Continue'}
+            <Button disabled={isLoading || isSubmitting} className="w-full cursor-pointer" size="sm" type="submit">
+                {(isLoading || isSubmitting) ? 'Processing' : 'Continue'}
             </Button>
             <Button nativeButton={false} render={<Link href='/login' />} variant='link' className="w-full cursor-pointer" size="sm" type="button">
                 Login
