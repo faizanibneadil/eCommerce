@@ -104,7 +104,7 @@ export function VariantSelector({ product }: { product: Product }) {
                   disabled={!isAvailableForSale}
                   key={option.id}
                   nativeButton={false}
-                  render={<Link href={{ query: optionSearchParams.toString() }} />}
+                  render={<Link href={{ query: optionSearchParams.toString() }} replace />}
                   // onClick={() => {
                   //   router.replace(`${optionUrl}`, {
                   //     scroll: false,

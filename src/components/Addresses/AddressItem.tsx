@@ -22,7 +22,7 @@ type Props = {
   /**
    * Hide all actions
    */
-  hideActions?: boolean
+  hideActions?: boolean,
 }
 
 export const AddressItem: React.FC<Props> = ({
@@ -55,7 +55,7 @@ export const AddressItem: React.FC<Props> = ({
         <p>{address.country}</p>
       </div>
 
-      {!hideActions && address.id && (
+      {!hideActions && (
         <div className="shrink flex flex-col gap-2">
           {actions ? (
             actions

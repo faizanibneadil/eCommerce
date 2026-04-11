@@ -47,11 +47,12 @@ export const Providers: React.FC<{
                   },
                 },
               }}
-              paymentMethods={[
-                // stripeAdapterClient({
-                //   publishableKey: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '',
-                // }),
-              ]}
+              paymentMethods={[{
+                confirmOrder: true,
+                initiatePayment: true,
+                name: 'cod',
+                label: 'Cash On Delivery'
+              }]}
             >
               {children}
             </EcommerceProvider>
