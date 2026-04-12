@@ -51,7 +51,7 @@ export default function OrderConfirmationDrawer(props: {
     return (
         <Dialog.Root open={isInternalOpen} disablePointerDismissal={true}>
             <Dialog.Portal>
-                <Dialog.Backdrop className="fixed inset-0 bg-black/75 backdrop-blur-[1px] transition-opacity duration-500 z-50" />
+                <Dialog.Backdrop className="fixed inset-0 bg-black/25 backdrop-blur-[1px] transition-opacity duration-500 z-50" />
 
                 <Dialog.Viewport className="fixed inset-0 z-60 flex items-end md:items-center justify-center">
                     <Dialog.Popup
