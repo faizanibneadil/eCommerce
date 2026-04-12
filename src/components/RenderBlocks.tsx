@@ -1,21 +1,23 @@
 import { toKebabCase } from '@/utilities/toKebabCase'
 import React, { Fragment } from 'react'
 
-import type { Page } from '../payload-types'
-import { BlockSlug } from 'payload'
+import type { Config, Page, Product, Variant } from '../payload-types'
+import type { BlockSlug } from 'payload'
 import { Carousel } from '@/blocks/CarouselBlock/Carousel'
 import { Categories } from '@/blocks/CategoriesBlock/Categories'
 import { Products } from '@/blocks/ProductsBlock/Products'
+import { FAQs } from '@/blocks/FAQs/FAQs'
 
 
 const blocksMap: Record<BlockSlug, React.ComponentType<any>> = {
     "carousel-block": Carousel,
     "categories-blocks": Categories,
-    "products-blocks": Products
+    "products-blocks": Products,
+    faqsBlock: FAQs
 }
 
 export const RenderBlocks: React.FC<{
-    blocks: Page['layout'][][0]
+    blocks: Config['blocks'][keyof Config['blocks']][] | null | undefined
 }> = (props) => {
     const { blocks } = props
 

@@ -49,6 +49,7 @@ export const ProductsCollection: CollectionOverride = ({ defaultCollection }) =>
         priceInUSD: true,
         inventory: true,
         meta: true,
+        enabledBlocks: true
     },
     fields: [
         { name: 'title', type: 'text', required: true },
@@ -128,21 +129,95 @@ export const ProductsCollection: CollectionOverride = ({ defaultCollection }) =>
                                 },
                             ],
                         },
+                        {
+                            name: 'sizeGuide',
+                            type: 'array',
+                            minRows: 1,
+                            interfaceName: 'TSizeGuidePropsType',
+                            fields: [
+                                {
+                                    type: 'array',
+                                    name: 'guide',
+                                    fields: [
+                                        {
+                                            name: 'label',
+                                            type: 'text',
+                                        },
+                                        {
+                                            name: 'value',
+                                            type: 'text',
+                                        },
+                                    ]
+                                },
+                                {
+                                    name: 'variantOption',
+                                    type: 'relationship',
+                                    relationTo: 'variantOptions',
+                                    admin: {
+                                        condition: (data) => {
+                                            return data?.enableVariants === true && data?.variantTypes?.length > 0
+                                        },
+                                    },
+                                    filterOptions: ({ data }) => {
+                                        if (data?.enableVariants && data?.variantTypes?.length) {
+                                            const variantTypeIDs = data.variantTypes.map((item: any) => {
+                                                if (typeof item === 'object' && item?.id) {
+                                                    return item.id
+                                                }
+                                                return item
+                                            }) as DefaultDocumentIDType[]
 
+                                            if (variantTypeIDs.length === 0)
+                                                return {
+                                                    variantType: {
+                                                        in: [],
+                                                    },
+                                                }
+
+                                            const query: Where = {
+                                                variantType: {
+                                                    in: variantTypeIDs,
+                                                },
+                                            }
+
+                                            return query
+                                        }
+
+                                        return {
+                                            variantType: {
+                                                in: [],
+                                            },
+                                        }
+                                    },
+                                },
+                            ],
+                        },
+                        {
+                            type: 'checkbox',
+                            name: 'enableBlockFromBlock',
+                            label: 'Enable Blocks from Blocks',
+                            defaultValue: false,
+                            admin: {
+                                description: 'Check this checkbox for using layout blocks from Re-useable Blocks collection'
+                            }
+                        },
+                        {
+                            type: 'relationship',
+                            relationTo: 'blocks',
+                            name: 'enabledBlocks',
+                            label: 'Select Block Collection.',
+                            admin: {
+                                condition: (_, { enableBlockFromBlock }) => Boolean(enableBlockFromBlock) === true
+                            }
+                        },
                         {
                             name: 'layout',
                             type: 'blocks',
-                            blocks: [
-                                {
-                                    slug: 'testBlock',
-                                    fields: [
-                                        {
-                                            type: 'text',
-                                            name: 'test'
-                                        }
-                                    ]
-                                }
-                            ],
+                            blocks: [],
+                            blockReferences: ['faqsBlock'],
+                            admin: {
+                                condition: (_, { enableBlockFromBlock }) => Boolean(enableBlockFromBlock) === false
+                            }
                         },
                     ],
                     label: 'Content',

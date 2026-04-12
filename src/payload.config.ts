@@ -29,6 +29,8 @@ import { plugins } from './plugins'
 import { ProductsBlock } from './blocks/ProductsBlock'
 import { CategoriesBlock } from './blocks/CategoriesBlock'
 import { CarouselBlock } from './blocks/CarouselBlock'
+import { FAQsBlock } from './blocks/FAQs'
+import { Blocks } from './collections/Blocks'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -52,9 +54,9 @@ export default buildConfig({
     slug: 'folders',
     browseByFolder: true
   },
-  collections: [Users, Pages, Categories, Media],
+  collections: [Users, Pages, Categories, Media, Blocks],
   globals: [Header, Footer, Settings],
-  blocks: [ProductsBlock, CategoriesBlock, CarouselBlock],
+  blocks: [ProductsBlock, CategoriesBlock, CarouselBlock, FAQsBlock],
   cors: [process.env.NEXT_PUBLIC_SERVER_URL!].filter(Boolean),
   csrf: [process.env.NEXT_PUBLIC_SERVER_URL!].filter(Boolean),
   db: postgresAdapter({

@@ -1,15 +1,14 @@
 'use client'
-import { RichText } from '@payloadcms/richtext-lexical/react'
-import { SerializedEditorState } from '@payloadcms/richtext-lexical/lexical'
-import { Button } from '@/components/ui/button'
-import { Product, Variant } from '@/payload-types'
 import { DecoratedBox } from '@/components/DecoratedBox'
+import type { Product, Variant } from '@/payload-types'
 import { useCurrency } from '@payloadcms/plugin-ecommerce/client/react'
+import { SerializedEditorState } from '@payloadcms/richtext-lexical/lexical'
+import { RichText } from '@payloadcms/richtext-lexical/react'
+import { Suspense } from 'react'
+import { AddToCart } from './AddToCart'
 import { Price } from './Price'
 import { StockIndicator } from './StockIndicator'
-import { Suspense } from 'react'
 import { VariantSelector } from './VariantSelector'
-import { AddToCart } from './AddToCart'
 
 export const ProductDetails: React.FC<{
     product: Product,
