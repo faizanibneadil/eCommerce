@@ -23,6 +23,8 @@ import { LoginForm } from "../LoginForm"
 import { Button } from "../ui/button"
 import { Divider } from "../ui/divider"
 import { InputGroup, InputGroupAddon, InputGroupInput } from "../ui/input-group"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog"
+import OrderConfirmationDrawer from "./OrderConfirmationDrawer"
 
 export const CheckoutPage: React.FC = () => {
     const [error, setError] = React.useState<null | string>(null)
@@ -55,7 +57,7 @@ export const CheckoutPage: React.FC = () => {
                 additionalData: {
                     ...(email ? { customerEmail: email } : {}),
                     billingAddress,
-                    shippingAddress: billingAddressSameAsShipping ? billingAddress : shippingAddress,
+                    shippingAddress: shippingAddress,
                 },
             })) as Record<string, unknown>
 
@@ -67,7 +69,7 @@ export const CheckoutPage: React.FC = () => {
                     customerEmail: email
                 }
             })
-            await clearCart().then(() => router.replace('/'))
+            // await clearCart().then(() => router.replace('/'))
             console.log('Order confirmed:', (confirmResult as any)?.orderID)
         } catch (error) {
             setTransactionStatus(null)
@@ -99,39 +101,42 @@ export const CheckoutPage: React.FC = () => {
     }
 
     return (
-        <div className="w-full">
-            <DecoratedBox>
-                <div className="flex items-center justify-center  px-4 py-2 md:px-6 md:py-4">
-                    <div className="w-full max-w-sm animate-in space-y-8">
-                        {Boolean(user) === false && (<GuestCheckoutForm
-                            email={email}
-                            setEmail={setEmail}
-                            setPaymentMethod={setPaymentMethod}
-                            setShippingAddress={setShippingAddress}
-                            shippingAddress={shippingAddress!}
-                            transactionStatus={transactionStatus}
-                        />)}
-                        {Boolean(user) === true && (<UserCheckoutForm
-                            setPaymentMethod={setPaymentMethod}
-                            setShippingAddress={setShippingAddress}
-                            shippingAddress={shippingAddress!}
-                            transactionStatus={transactionStatus}
-                        />)}
-                        {Boolean(shippingAddress) === true && Boolean(paymentMethod) === true && Boolean(paymentMethod) === true && (
-                            <Button onClick={() => initiatePaymentIntent(paymentMethod!)} disabled={Boolean(transactionStatus)} className="w-full" type="button" variant="outline">
-                                {Boolean(user) === false && (
-                                    <UserCircle data-icon="inline-start" />
-                                )}
-                                {Boolean(transactionStatus)
-                                    ? `Processing (${transactionStatus})`
-                                    : Boolean(user) === false ? 'Continue as Guest' : 'Continue'}
-                            </Button>
-                        )}
-                        <TermsAndConditions />
+        <>
+            <OrderConfirmationDrawer transactionStatus={transactionStatus} />
+            <div className="w-full">
+                <DecoratedBox>
+                    <div className="flex items-center justify-center  px-4 py-2 md:px-6 md:py-4">
+                        <div className="w-full max-w-sm animate-in space-y-8">
+                            {Boolean(user) === false && (<GuestCheckoutForm
+                                email={email}
+                                setEmail={setEmail}
+                                setPaymentMethod={setPaymentMethod}
+                                setShippingAddress={setShippingAddress}
+                                shippingAddress={shippingAddress!}
+                                transactionStatus={transactionStatus}
+                            />)}
+                            {Boolean(user) === true && (<UserCheckoutForm
+                                setPaymentMethod={setPaymentMethod}
+                                setShippingAddress={setShippingAddress}
+                                shippingAddress={shippingAddress!}
+                                transactionStatus={transactionStatus}
+                            />)}
+                            {Boolean(shippingAddress) === true && Boolean(paymentMethod) === true && Boolean(paymentMethod) === true && (
+                                <Button onClick={() => initiatePaymentIntent(paymentMethod!)} disabled={Boolean(transactionStatus)} className="w-full" type="button" variant="outline">
+                                    {Boolean(user) === false && (
+                                        <UserCircle data-icon="inline-start" />
+                                    )}
+                                    {Boolean(transactionStatus)
+                                        ? `Processing (${transactionStatus})`
+                                        : Boolean(user) === false ? 'Continue as Guest' : 'Continue'}
+                                </Button>
+                            )}
+                            <TermsAndConditions />
+                        </div>
                     </div>
-                </div>
-            </DecoratedBox>
-        </div>
+                </DecoratedBox>
+            </div>
+        </>
     )
 }
 
