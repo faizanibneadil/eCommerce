@@ -31,6 +31,7 @@ import { CategoriesBlock } from './blocks/CategoriesBlock'
 import { CarouselBlock } from './blocks/CarouselBlock'
 import { FAQsBlock } from './blocks/FAQs'
 import { Blocks } from './collections/Blocks'
+import { ContentBlock } from './blocks/ContentBlock'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -56,7 +57,7 @@ export default buildConfig({
   },
   collections: [Users, Pages, Categories, Media, Blocks],
   globals: [Header, Footer, Settings],
-  blocks: [ProductsBlock, CategoriesBlock, CarouselBlock, FAQsBlock],
+  blocks: [ProductsBlock, CategoriesBlock, CarouselBlock, FAQsBlock, ContentBlock],
   cors: [process.env.NEXT_PUBLIC_SERVER_URL!].filter(Boolean),
   csrf: [process.env.NEXT_PUBLIC_SERVER_URL!].filter(Boolean),
   db: postgresAdapter({

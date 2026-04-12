@@ -87,7 +87,7 @@ export const Pages: CollectionConfig = {
                             label: 'Design You\'r Page',
                             blocks: [],
                             maxRows: 50,
-                            blockReferences: ['products-blocks', 'categories-blocks', 'carousel-block'],
+                            blockReferences: ['products-blocks', 'categories-blocks', 'carousel-block', 'contentBlock'],
                             admin: {
                                 initCollapsed: true,
                                 condition: ({ enableCollection }) => Boolean(enableCollection) === false,

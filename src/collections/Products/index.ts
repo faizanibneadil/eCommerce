@@ -214,7 +214,7 @@ export const ProductsCollection: CollectionOverride = ({ defaultCollection }) =>
                             name: 'layout',
                             type: 'blocks',
                             blocks: [],
-                            blockReferences: ['faqsBlock'],
+                            blockReferences: ['faqsBlock', 'contentBlock'],
                             admin: {
                                 condition: (_, { enableBlockFromBlock }) => Boolean(enableBlockFromBlock) === false
                             }
