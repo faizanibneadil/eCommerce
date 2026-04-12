@@ -1,11 +1,19 @@
-import { DataFromCollectionSlug } from "payload"
+import type { DataFromCollectionSlug } from "payload"
 
 import { DecoratedBox } from "@/components/DecoratedBox"
 import { ProductDetails } from "./ProductDetails"
 import { ProductGallery } from "./ProductGalley"
 import { RelatedProducts } from "./RelatedProducts"
+import { RenderBlocks } from "@/components/RenderBlocks"
+import { SizeGuide } from "./SizeGuide"
+import { queryBlocksFromBlocksById } from "@/utilities/queryBlocksFromBlocksById"
 
-export const SingleProduct: React.FC<DataFromCollectionSlug<'products'>> = (props: DataFromCollectionSlug<'products'>) => {
+export const SingleProduct: React.FC<DataFromCollectionSlug<'products'>> = async (props: DataFromCollectionSlug<'products'>) => {
+    const blocks = props.enableBlockFromBlock
+        ? typeof props?.enabledBlocks === 'number'
+            ? await queryBlocksFromBlocksById({ id: props?.enabledBlocks })
+            : props.enabledBlocks?.blocks
+        : props.layout
     return (
         <>
             <DecoratedBox>
@@ -18,6 +26,8 @@ export const SingleProduct: React.FC<DataFromCollectionSlug<'products'>> = (prop
                     </div>
                 </div>
             </DecoratedBox>
+            <SizeGuide sizesGuides={props.sizeGuide} />
+            <RenderBlocks blocks={blocks} />
             <RelatedProducts products={props.relatedProducts} />
         </>
     )

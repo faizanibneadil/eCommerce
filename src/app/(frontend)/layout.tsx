@@ -52,7 +52,7 @@ export default async function RootLayout({ children }: React.PropsWithChildren) 
       suppressHydrationWarning
     >
       <head>
-        <InitTheme />
+        {/* <InitTheme /> */}
         <meta httpEquiv='Accept-CH' content='Sec-CH-Width, Sec-CH-DPR, Sec-Ch-Viewport-Width, Width, DPR, Viewport-Width, Save-Data, ECT, RTT, Downlink' />
         <link href="/favicon.ico" rel="icon" sizes="32x32" />
         <link href="/favicon.svg" rel="icon" type="image/svg+xml" />

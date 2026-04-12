@@ -5,8 +5,8 @@ import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 import { CollectionSlug, DataFromCollectionSlug } from "payload"
 import { Spinner } from "./ui/spinner"
-import { getMediaUrl } from "@/utilities/getURL"
-import type { Product, WithContext } from 'schema-dts';
+import { getMediaUrl, getServerSideURL } from "@/utilities/getURL"
+import type { BreadcrumbList, Product, WithContext } from 'schema-dts';
 
 export const collectionViewMap: Record<'products' | 'categories', {
     Component: React.ComponentType<DataFromCollectionSlug<'products' | 'categories'>>,
@@ -14,7 +14,7 @@ export const collectionViewMap: Record<'products' | 'categories', {
     metadata: (props: {
         doc: DataFromCollectionSlug<'products' | 'categories'>
     }) => Promise<Metadata> | Metadata,
-    JsonLdSchemas?: (props: {
+    generateJsonLDSchemas?: (props: {
         doc: DataFromCollectionSlug<'products' | 'categories'>
     }) => any[]
 }> = {
@@ -45,15 +45,15 @@ export const collectionViewMap: Record<'products' | 'categories', {
         )
     },
     products: {
-        JsonLdSchemas: ({ doc }: { doc: DataFromCollectionSlug<"products"> }) => {
+        generateJsonLDSchemas: ({ doc }: { doc: DataFromCollectionSlug<"products"> }) => {
             const hasStock = doc?.enableVariants
                 ? doc?.variants?.docs?.some((variant) => {
                     if (typeof variant !== 'object') return false
                     return variant.inventory && variant?.inventory > 0
                 })
                 : doc?.inventory! > 0
-            let price = doc.priceInPKR
 
+            let price = doc.priceInPKR
             if (doc.enableVariants && doc?.variants?.docs?.length) {
                 price = doc?.variants?.docs?.reduce((acc, variant) => {
                     if (typeof variant === 'object' && variant?.priceInPKR && acc && variant?.priceInPKR > acc) {
@@ -78,7 +78,33 @@ export const collectionViewMap: Record<'products' | 'categories', {
                     priceCurrency: 'pkr',
                 }
             }
-            return [productSchema]
+
+            const breadcrumbs: WithContext<BreadcrumbList> = {
+                "@context": 'https://schema.org',
+                "@type": 'BreadcrumbList',
+                itemListElement: [
+                    {
+                        "@type": 'ListItem',
+                        position: 1,
+                        name: 'Home',
+                        item: getServerSideURL()
+                    },
+                    {
+                        "@type": 'ListItem',
+                        position: 2,
+                        name: 'Products',
+                        item: `${getServerSideURL()}/products`
+                    },
+                    {
+                        "@type": 'ListItem',
+                        position: 3,
+                        name: doc?.meta?.title ?? doc?.title,
+                        item: `${getServerSideURL()}/products/${doc?.slug}`
+                    }
+                ]
+            }
+
+            return [productSchema, breadcrumbs]
         },
         Component: SingleProduct,
         metadata: ({ doc }) => {
@@ -121,10 +147,10 @@ export const RenderCollectionView: React.FC<{
     }
 
     const View = collectionViewMap[props.collectionSlug as 'products' | 'categories']?.Component || (() => null)
-    const JsonLdSchemas = collectionViewMap[props.collectionSlug as 'products' | 'categories']?.JsonLdSchemas || (() => [])
+    const generatedSchemas = collectionViewMap[props.collectionSlug as 'products' | 'categories']?.generateJsonLDSchemas || (() => [])
 
     // @ts-expect-error
-    const schemas = JsonLdSchemas?.({ doc: collectionView }) ?? []
+    const schemas = generatedSchemas?.({ doc: collectionView }) ?? []
 
     return (
         <>

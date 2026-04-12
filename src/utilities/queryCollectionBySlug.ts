@@ -11,6 +11,7 @@ export const queryCollectionBySlug = async ({ collectionSlug }: { collectionSlug
         draft,
         overrideAccess: draft,
         pagination: true,
+        depth: 2,
         where: {
             and: [
                 // {

@@ -12,6 +12,7 @@ export const queryPageBySlug = async ({ slug }: { slug: string }) => {
         limit: 1,
         overrideAccess: draft,
         pagination: false,
+        depth: 2,
         where: {
             and: [
                 {

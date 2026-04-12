@@ -8,6 +8,23 @@
 
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TSizeGuidePropsType".
+ */
+export type TSizeGuidePropsType =
+  | {
+      guide?:
+        | {
+            label?: string | null;
+            value?: string | null;
+            id?: string | null;
+          }[]
+        | null;
+      variantOption?: (number | null) | VariantOption;
+      id?: string | null;
+    }[]
+  | null;
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "OrderStatus".
  */
 export type OrderStatus = ('processing' | 'completed' | 'cancelled' | 'refunded') | null;
@@ -74,12 +91,14 @@ export interface Config {
     'products-blocks': ProductsPropsTypes;
     'categories-blocks': CategoriesPropsTypes;
     'carousel-block': CarouselPropsTypes;
+    faqsBlock: TFAQsBlockPropsType;
   };
   collections: {
     users: User;
     pages: Page;
     categories: Category;
     media: Media;
+    blocks: Block;
     redirects: Redirect;
     forms: Form;
     'form-submissions': FormSubmission;
@@ -121,6 +140,7 @@ export interface Config {
     pages: PagesSelect<false> | PagesSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    blocks: BlocksSelect<false> | BlocksSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
@@ -243,14 +263,13 @@ export interface Product {
         id?: string | null;
       }[]
     | null;
-  layout?:
-    | {
-        test?: string | null;
-        id?: string | null;
-        blockName?: string | null;
-        blockType: 'testBlock';
-      }[]
-    | null;
+  sizeGuide?: TSizeGuidePropsType;
+  /**
+   * Check this checkbox for using layout blocks from Re-useable Blocks collection
+   */
+  enableBlockFromBlock?: boolean | null;
+  enabledBlocks?: (number | null) | Block;
+  layout?: TFAQsBlockPropsType[] | null;
   inventory?: number | null;
   enableVariants?: boolean | null;
   variantTypes?: (number | VariantType)[] | null;
@@ -420,23 +439,49 @@ export interface VariantType {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "variants".
+ * via the `definition` "blocks".
  */
-export interface Variant {
+export interface Block {
   id: number;
-  /**
-   * Used for administrative purposes, not shown to customers. This is populated by default.
-   */
-  title?: string | null;
-  product: number | Product;
-  options: (number | VariantOption)[];
-  inventory?: number | null;
-  priceInPKREnabled?: boolean | null;
-  priceInPKR?: number | null;
+  title: string;
+  blocks?: (CarouselPropsTypes | CategoriesPropsTypes | TFAQsBlockPropsType | ProductsPropsTypes)[] | null;
   updatedAt: string;
   createdAt: string;
   deletedAt?: string | null;
   _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CarouselPropsTypes".
+ */
+export interface CarouselPropsTypes {
+  slides?:
+    | {
+        type?: ('internal' | 'external') | null;
+        url?: string | null;
+        image?: (number | null) | Media;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'carousel-block';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CategoriesPropsTypes".
+ */
+export interface CategoriesPropsTypes {
+  label?: string | null;
+  enableSlides?: boolean | null;
+  enableSpecificCategories?: boolean | null;
+  /**
+   * Select Which Categories should show in this section.
+   */
+  categories?: (number | Category)[] | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'categories-blocks';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -482,36 +527,41 @@ export interface Category {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "CategoriesPropsTypes".
+ * via the `definition` "TFAQsBlockPropsType".
  */
-export interface CategoriesPropsTypes {
-  label?: string | null;
-  enableSlides?: boolean | null;
-  enableSpecificCategories?: boolean | null;
-  /**
-   * Select Which Categories should show in this section.
-   */
-  categories?: (number | Category)[] | null;
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'categories-blocks';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "CarouselPropsTypes".
- */
-export interface CarouselPropsTypes {
-  slides?:
+export interface TFAQsBlockPropsType {
+  heading?: string | null;
+  description?: string | null;
+  faqs?:
     | {
-        type?: ('internal' | 'external') | null;
-        url?: string | null;
-        image?: (number | null) | Media;
+        question?: string | null;
+        answer?: string | null;
         id?: string | null;
       }[]
     | null;
   id?: string | null;
   blockName?: string | null;
-  blockType: 'carousel-block';
+  blockType: 'faqsBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "variants".
+ */
+export interface Variant {
+  id: number;
+  /**
+   * Used for administrative purposes, not shown to customers. This is populated by default.
+   */
+  title?: string | null;
+  product: number | Product;
+  options: (number | VariantOption)[];
+  inventory?: number | null;
+  priceInPKREnabled?: boolean | null;
+  priceInPKR?: number | null;
+  updatedAt: string;
+  createdAt: string;
+  deletedAt?: string | null;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1015,6 +1065,10 @@ export interface PayloadLockedDocument {
         value: number | Media;
       } | null)
     | ({
+        relationTo: 'blocks';
+        value: number | Block;
+      } | null)
+    | ({
         relationTo: 'redirects';
         value: number | Redirect;
       } | null)
@@ -1259,6 +1313,18 @@ export interface MediaSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "blocks_select".
+ */
+export interface BlocksSelect<T extends boolean = true> {
+  title?: T;
+  blocks?: T | {};
+  updatedAt?: T;
+  createdAt?: T;
+  deletedAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects_select".
  */
 export interface RedirectsSelect<T extends boolean = true> {
@@ -1498,17 +1564,10 @@ export interface ProductsSelect<T extends boolean = true> {
         variantOption?: T;
         id?: T;
       };
-  layout?:
-    | T
-    | {
-        testBlock?:
-          | T
-          | {
-              test?: T;
-              id?: T;
-              blockName?: T;
-            };
-      };
+  sizeGuide?: T | TSizeGuidePropsTypeSelect<T>;
+  enableBlockFromBlock?: T;
+  enabledBlocks?: T;
+  layout?: T | {};
   inventory?: T;
   enableVariants?: T;
   variantTypes?: T;
@@ -1530,6 +1589,21 @@ export interface ProductsSelect<T extends boolean = true> {
   createdAt?: T;
   deletedAt?: T;
   _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TSizeGuidePropsType_select".
+ */
+export interface TSizeGuidePropsTypeSelect<T extends boolean = true> {
+  guide?:
+    | T
+    | {
+        label?: T;
+        value?: T;
+        id?: T;
+      };
+  variantOption?: T;
+  id?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
