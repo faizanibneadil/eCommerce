@@ -22,7 +22,13 @@ export const Blocks: CollectionConfig<'blocks'> = {
             type: 'blocks',
             name: 'blocks',
             blocks: [],
-            blockReferences: ['carousel-block', 'categories-blocks', 'faqsBlock', 'products-blocks']
+            blockReferences: [
+                'carousel-block',
+                'categories-blocks',
+                'faqsBlock',
+                'products-blocks',
+                'contentBlock'
+            ]
         }
     ],
     versions: {

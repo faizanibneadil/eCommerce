@@ -7,13 +7,15 @@ import { Carousel } from '@/blocks/CarouselBlock/Carousel'
 import { Categories } from '@/blocks/CategoriesBlock/Categories'
 import { Products } from '@/blocks/ProductsBlock/Products'
 import { FAQs } from '@/blocks/FAQs/FAQs'
+import { ContentBlock } from '@/blocks/ContentBlock/ContentBlock'
 
 
 const blocksMap: Record<BlockSlug, React.ComponentType<any>> = {
     "carousel-block": Carousel,
     "categories-blocks": Categories,
     "products-blocks": Products,
-    faqsBlock: FAQs
+    faqsBlock: FAQs,
+    contentBlock: ContentBlock
 }
 
 export const RenderBlocks: React.FC<{

@@ -92,6 +92,7 @@ export interface Config {
     'categories-blocks': CategoriesPropsTypes;
     'carousel-block': CarouselPropsTypes;
     faqsBlock: TFAQsBlockPropsType;
+    contentBlock: ContentBlockPropsType;
   };
   collections: {
     users: User;
@@ -269,7 +270,7 @@ export interface Product {
    */
   enableBlockFromBlock?: boolean | null;
   enabledBlocks?: (number | null) | Block;
-  layout?: TFAQsBlockPropsType[] | null;
+  layout?: (TFAQsBlockPropsType | ContentBlockPropsType)[] | null;
   inventory?: number | null;
   enableVariants?: boolean | null;
   variantTypes?: (number | VariantType)[] | null;
@@ -444,7 +445,9 @@ export interface VariantType {
 export interface Block {
   id: number;
   title: string;
-  blocks?: (CarouselPropsTypes | CategoriesPropsTypes | TFAQsBlockPropsType | ProductsPropsTypes)[] | null;
+  blocks?:
+    | (CarouselPropsTypes | CategoriesPropsTypes | TFAQsBlockPropsType | ProductsPropsTypes | ContentBlockPropsType)[]
+    | null;
   updatedAt: string;
   createdAt: string;
   deletedAt?: string | null;
@@ -542,6 +545,30 @@ export interface TFAQsBlockPropsType {
   id?: string | null;
   blockName?: string | null;
   blockType: 'faqsBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ContentBlockPropsType".
+ */
+export interface ContentBlockPropsType {
+  richText?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'contentBlock';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -784,7 +811,7 @@ export interface Page {
    */
   enableCollection: boolean;
   configuredCollectionSlug?: string | null;
-  layout?: (ProductsPropsTypes | CategoriesPropsTypes | CarouselPropsTypes)[] | null;
+  layout?: (ProductsPropsTypes | CategoriesPropsTypes | CarouselPropsTypes | ContentBlockPropsType)[] | null;
   meta?: {
     title?: string | null;
     /**
