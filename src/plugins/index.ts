@@ -337,7 +337,7 @@ export const plugins: Plugin[] = [
                             data: {
                                 ...(req.user ? { customer: req.user.id } : { customerEmail }),
                                 amount,
-                                billingAddress: billingAddressFromData,
+                                billingAddress: shippingAddressFromData,
                                 cart: cart.id,
                                 currency: currency.toUpperCase() as unknown as any,
                                 items: flattenedCart,
