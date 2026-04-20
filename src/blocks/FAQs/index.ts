@@ -1,3 +1,4 @@
+import { FixedToolbarFeature, HeadingFeature, HorizontalRuleFeature, InlineToolbarFeature, lexicalEditor } from "@payloadcms/richtext-lexical";
 import { Block } from "payload";
 
 export const FAQsBlock: Block = {
@@ -27,9 +28,21 @@ export const FAQsBlock: Block = {
                     label: 'Question'
                 },
                 {
-                    type: 'textarea',
+                    type: 'richText',
                     name: 'answer',
-                    label: 'Answer'
+                    editor: lexicalEditor({
+                        features: ({ rootFeatures }) => {
+                            return [
+                                ...rootFeatures,
+                                HeadingFeature({ enabledHeadingSizes: ['h1', 'h2', 'h3', 'h4'] }),
+                                FixedToolbarFeature(),
+                                InlineToolbarFeature(),
+                                HorizontalRuleFeature(),
+                            ]
+                        },
+                    }),
+                    label: false,
+                    required: false,
                 }
             ]
         }

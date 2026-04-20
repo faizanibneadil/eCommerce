@@ -194,7 +194,7 @@ export const ProductsCollection: CollectionOverride = ({ defaultCollection }) =>
                         },
                         {
                             type: 'checkbox',
-                            name: 'enableBlockFromBlock',
+                            name: 'enableBlocksFromBlocks',
                             label: 'Enable Blocks from Blocks',
                             defaultValue: false,
                             admin: {
@@ -206,8 +206,9 @@ export const ProductsCollection: CollectionOverride = ({ defaultCollection }) =>
                             relationTo: 'blocks',
                             name: 'enabledBlocks',
                             label: 'Select Block Collection.',
+                            hasMany: true,
                             admin: {
-                                condition: (_, { enableBlockFromBlock }) => Boolean(enableBlockFromBlock) === true
+                                condition: (_, { enableBlocksFromBlocks }) => Boolean(enableBlocksFromBlocks) === true
                             }
                         },
                         {
@@ -216,7 +217,7 @@ export const ProductsCollection: CollectionOverride = ({ defaultCollection }) =>
                             blocks: [],
                             blockReferences: ['faqsBlock', 'contentBlock'],
                             admin: {
-                                condition: (_, { enableBlockFromBlock }) => Boolean(enableBlockFromBlock) === false
+                                condition: (_, { enableBlocksFromBlocks }) => Boolean(enableBlocksFromBlocks) === false
                             }
                         },
                     ],

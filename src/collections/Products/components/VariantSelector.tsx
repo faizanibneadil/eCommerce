@@ -8,6 +8,7 @@ import clsx from 'clsx'
 import Link from 'next/link'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import React from 'react'
+import { parseAsString, useQueryStates } from 'nuqs'
 
 export function VariantSelector({ product }: { product: Product }) {
   // const router = useRouter()
@@ -16,6 +17,21 @@ export function VariantSelector({ product }: { product: Product }) {
   const variants = product.variants?.docs
   const variantTypes = product.variantTypes
   const hasVariants = Boolean(product.enableVariants && variants?.length && variantTypes?.length)
+
+  const dynamicSearchParams = variantTypes?.filter(type => {
+    return typeof type === 'object'
+  }).map(type => {
+    return [type.name, parseAsString.withDefault('')]
+  })
+
+  const [variantQuery, setVariantQuery] = useQueryStates({
+    ...Object.fromEntries([...(dynamicSearchParams ?? [])]),
+    'variant': parseAsString.withDefault('')
+  }, {
+    shallow: true,
+    history: 'replace'
+  })
+
 
   if (!hasVariants) {
     return null
@@ -59,6 +75,7 @@ export function VariantSelector({ product }: { product: Product }) {
               const currentOptions = Array.from(optionSearchParams.values())
 
               let isAvailableForSale = true
+              let variantID: number
 
               // Find a matching variant
               if (variants) {
@@ -77,6 +94,7 @@ export function VariantSelector({ product }: { product: Product }) {
                   })
 
                 if (matchingVariant) {
+                  variantID = matchingVariant.id
                   // If we found a matching variant, set the variant ID in the search params.
                   optionSearchParams.set('variant', String(matchingVariant.id))
 
@@ -95,21 +113,25 @@ export function VariantSelector({ product }: { product: Product }) {
 
               return (
                 <Button
-                  variant={isActive ? 'outline' : 'secondary'}
+                  variant={isActive ? 'default' : 'secondary'}
                   aria-disabled={!isAvailableForSale}
-                  className={clsx('px-2 rounded-none', {
-                    'bg-primary/5 text-primary': isActive,
+                  className={clsx('px-2 rounded-none disabled:cursor-not-allowed', {
+                    // 'bg-primary/5 text-primary': isActive,
                     'cursor-not-allowed': !isAvailableForSale
                   })}
                   disabled={!isAvailableForSale}
                   key={option.id}
-                  nativeButton={false}
-                  render={<Link scroll={false} href={{ query: optionSearchParams.toString() }} replace />}
-                  // onClick={() => {
-                  //   router.replace(`${optionUrl}`, {
-                  //     scroll: false,
-                  //   })
-                  // }}
+                  // nativeButton={false}
+                  // render={<Link scroll={false} href={{ query: optionSearchParams.toString() }} replace />}
+                  onClick={() => {
+                    setVariantQuery({
+                      [optionKeyLowerCase]: optionID,
+                      variant: variantID
+                    })
+                    // router.replace(`${optionUrl}`, {
+                    //   scroll: false,
+                    // })
+                  }}
                   title={`${option.label} ${!isAvailableForSale ? ' (Out of Stock)' : ''}`}
                 >
                   {option.label}

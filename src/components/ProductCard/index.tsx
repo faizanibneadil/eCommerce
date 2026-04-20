@@ -18,12 +18,14 @@ export const ProductCard: React.FC<{
     product: Product | Promise<Product>,
     enableTitle?: boolean,
     enableSlideAsVariantSwitch?: boolean,
-    enableSlideThumb?: boolean
+    enableSlideThumb?: boolean,
+    enableCarousel?: boolean
 }> = ({
     product: productFromProps,
     enableTitle = true,
     enableSlideAsVariantSwitch = false,
-    enableSlideThumb = false
+    enableSlideThumb = false,
+    enableCarousel = false
 }) => {
         const product = productFromProps instanceof Promise ? React.use(productFromProps) : productFromProps
 
@@ -49,9 +51,12 @@ export const ProductCard: React.FC<{
             thumbApi?.scrollTo(idx)
         }
 
+        const media = product?.gallery?.at(0)
+        const mediaSrc = typeof media?.image === 'number' ? getMedia(media?.image!) : media?.image
+
         return (
             <div className="flex flex-col  md:max-w-xs">
-                <div className="">
+                {enableCarousel ? (<div className="">
                     <Carousel className="w-full group" setApi={setSlidesApi} opts={{ loop: true }}>
                         <CarouselContent className="md:aspect-square">
                             {product?.gallery?.map((media, index) => {
@@ -86,7 +91,13 @@ export const ProductCard: React.FC<{
                             ))}
                         </div>
                     </Carousel>
-                </div>
+                </div>) : (
+                    <React.Suspense fallback={null}>
+                        <Link href={`/products/${product.slug}`}>
+                            <CMSImage alt={product?.title} src={mediaSrc!} />
+                        </Link>
+                    </React.Suspense>
+                )}
                 {enableSlideThumb && (
                     <Carousel className="w-full group" setApi={setThumbApi} opts={{ align: 'center', containScroll: 'keepSnaps' }}>
                         <CarouselContent className="mt-2">

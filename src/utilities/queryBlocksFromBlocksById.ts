@@ -1,12 +1,16 @@
 import config from '@payload-config'
 import { getPayload } from 'payload'
 
-export const queryBlocksFromBlocksById = async ({ id }: { id: number }) => {
+export const queryBlocksFromBlocksById = async ({ ids }: { ids: number[] }) => {
     const payload = await getPayload({ config })
-    const blocks = await payload.findByID({
+    const blocks = await payload.find({
         collection: 'blocks',
-        id
+        where: {
+            id: {
+                in: [...ids]
+            }
+        }
     })
 
-    return blocks?.blocks ?? []
+    return blocks?.docs ?? []
 }

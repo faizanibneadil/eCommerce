@@ -11,6 +11,7 @@ export const ProductGallery: React.FC<{
         enableSlideAsVariantSwitch={true}
         enableSlideThumb={true}
         enableTitle={false}
+        enableCarousel={true}
     />
 
 }

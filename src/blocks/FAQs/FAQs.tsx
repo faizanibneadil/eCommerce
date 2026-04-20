@@ -1,5 +1,7 @@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { TFAQsBlockPropsType } from "@/payload-types";
+import { SerializedEditorState } from '@payloadcms/richtext-lexical/lexical'
+import { RichText } from '@payloadcms/richtext-lexical/react'
 
 export const FAQs: React.FC<TFAQsBlockPropsType> = (props) => {
 
@@ -21,7 +23,7 @@ export const FAQs: React.FC<TFAQsBlockPropsType> = (props) => {
                             {item?.question}
                         </AccordionTrigger>
                         <AccordionContent className="pb-4 text-muted-foreground">
-                            {item?.answer}
+                            <RichText data={item?.answer as SerializedEditorState} className="prose-sm  prose md:prose-md dark:prose-invert px-2 md:p-2" />
                         </AccordionContent>
                     </AccordionItem>
                 ))}
