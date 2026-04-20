@@ -23,7 +23,7 @@ export const FAQs: React.FC<TFAQsBlockPropsType> = (props) => {
                             {item?.question}
                         </AccordionTrigger>
                         <AccordionContent className="pb-4 text-muted-foreground">
-                            <RichText data={item?.answer as SerializedEditorState} className="prose-sm  prose md:prose-md dark:prose-invert px-2 md:p-2" />
+                            <RichText data={item?.answer as SerializedEditorState} className="prose-sm  prose md:prose-md dark:prose-invert" />
                         </AccordionContent>
                     </AccordionItem>
                 ))}
