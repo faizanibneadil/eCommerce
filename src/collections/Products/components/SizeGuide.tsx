@@ -34,9 +34,9 @@ export const SizeGuide: React.FC<{ sizesGuides: TSizeGuidePropsType | undefined 
 
     return (
         <DecoratedBox dividerTop={false}>
-            <div className='p-4'>
+            <div className=''>
                 <Collapsible className="flex w-full flex-col gap-2">
-                    <CollapsibleTrigger className="flex items-center justify-between gap-4">
+                    <CollapsibleTrigger className="flex items-center justify-between gap-4 p-4">
                         <h4 className="text-sm font-semibold">Size Guide</h4>
                         <ChevronsUpDown className="size-4" />
                         <span className="sr-only">Toggle details</span>
@@ -46,10 +46,10 @@ export const SizeGuide: React.FC<{ sizesGuides: TSizeGuidePropsType | undefined 
                             <TableBody>
                                 {sizesGuides?.at(idx)?.guide?.map((item) => (
                                     <TableRow key={item.id}>
-                                        <TableCell className='px-0'>
+                                        <TableCell className='px-4'>
                                             {item.label}
                                         </TableCell>
-                                        <TableCell className='px-0'>
+                                        <TableCell className='px-4'>
                                             {item.value}
                                         </TableCell>
                                     </TableRow>

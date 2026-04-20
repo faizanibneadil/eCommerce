@@ -71,6 +71,7 @@ export const generateMetadata = async (props: {
 export default async function Page(props: { params: Promise<{ collection: CollectionSlug, slug: string }> }) {
     // return null
     const params = await props.params
+    console.log({ params })
     const page = await queryPageBySlug({
         slug: params.slug
     })
