@@ -268,8 +268,8 @@ export interface Product {
   /**
    * Check this checkbox for using layout blocks from Re-useable Blocks collection
    */
-  enableBlockFromBlock?: boolean | null;
-  enabledBlocks?: (number | null) | Block;
+  enableBlocksFromBlocks?: boolean | null;
+  enabledBlocks?: (number | Block)[] | null;
   layout?: (TFAQsBlockPropsType | ContentBlockPropsType)[] | null;
   inventory?: number | null;
   enableVariants?: boolean | null;
@@ -538,7 +538,21 @@ export interface TFAQsBlockPropsType {
   faqs?:
     | {
         question?: string | null;
-        answer?: string | null;
+        answer?: {
+          root: {
+            type: string;
+            children: {
+              type: any;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        } | null;
         id?: string | null;
       }[]
     | null;
@@ -1592,7 +1606,7 @@ export interface ProductsSelect<T extends boolean = true> {
         id?: T;
       };
   sizeGuide?: T | TSizeGuidePropsTypeSelect<T>;
-  enableBlockFromBlock?: T;
+  enableBlocksFromBlocks?: T;
   enabledBlocks?: T;
   layout?: T | {};
   inventory?: T;

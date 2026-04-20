@@ -6,13 +6,13 @@ import { ProductGallery } from "./ProductGalley"
 import { RelatedProducts } from "./RelatedProducts"
 import { RenderBlocks } from "@/components/RenderBlocks"
 import { SizeGuide } from "./SizeGuide"
-import { queryBlocksFromBlocksById } from "@/utilities/queryBlocksFromBlocksById"
+// import { queryBlocksFromBlocksById } from "@/utilities/queryBlocksFromBlocksById"
 
 export const SingleProduct: React.FC<DataFromCollectionSlug<'products'>> = async (props: DataFromCollectionSlug<'products'>) => {
-    const blocks = props.enableBlockFromBlock
-        ? typeof props?.enabledBlocks === 'number'
-            ? await queryBlocksFromBlocksById({ id: props?.enabledBlocks })
-            : props.enabledBlocks?.blocks
+    const blocks = props.enableBlocksFromBlocks
+        ? props.enabledBlocks?.filter(item => typeof item === 'object').flatMap(item => {
+            return item.blocks ?? []
+        })
         : props.layout
     return (
         <>

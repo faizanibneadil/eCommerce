@@ -2,6 +2,7 @@ import { sqliteAdapter } from '@payloadcms/db-sqlite'
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import sharp from 'sharp'
 import { redisKVAdapter } from '@payloadcms/kv-redis'
+import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
 
 import {
   BoldFeature,
@@ -121,4 +122,24 @@ export default buildConfig({
   // if you want to resize images, crop, set focal point, etc.
   // make sure to install it and pass it to the config.
   sharp,
+  email: nodemailerAdapter({
+    defaultFromAddress: 'faizanibneadil1@gmail.com',
+    defaultFromName: 'Noore Official',
+    // Nodemailer transportOptions
+    transportOptions: {
+      host: 'smtp.gmail.com',
+      port: 465,
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+      },
+    },
+  }),
+  onInit: async (payload) => {
+    // await payload.sendEmail({
+    //   to: 'faizanibneadil1@gmail.com',
+    //   subject: 'testing email',
+    //   text: 'this is testing email...'
+    // })
+  }
 })
