@@ -1,6 +1,6 @@
 import { formBuilderPlugin } from '@payloadcms/plugin-form-builder'
 import { seoPlugin } from '@payloadcms/plugin-seo'
-// import { mcpPlugin } from "@payloadcms/plugin-mcp"
+import { mcpPlugin } from "@payloadcms/plugin-mcp"
 import { redirectsPlugin } from '@payloadcms/plugin-redirects'
 import { nestedDocsPlugin } from '@payloadcms/plugin-nested-docs'
 import { Plugin } from 'payload'
@@ -429,6 +429,60 @@ export const plugins: Plugin[] = [
         },
         addresses: {
             supportedCountries: [...defaultCountries, { label: 'Pakistan', value: 'PK' }]
+        }
+    }),
+    mcpPlugin({
+        disabled: false,
+        mcp: {
+            serverOptions: {
+                serverInfo: {
+                    name: 'Noore Official',
+                    version: '1.0.0'
+                },
+            },
+            handlerOptions: {
+                // basePath: getServerSideURL(),
+                disableSse: false,
+                redisUrl: process.env.REDIS_URL,
+                verboseLogs: true
+            },
+        },
+        globals: {
+            footer: {
+                enabled: true,
+                description: 'The footer managements section.'
+            },
+            header: {
+                enabled: true,
+                description: 'The Website headers managements section.'
+            },
+            settings: {
+                enabled: true,
+                description: 'The Website Settings managements section.'
+            }
+        },
+        userCollection: 'users',
+        collections: {
+            pages: {
+                enabled: true,
+                description: 'The Website Pages. where you can manage your website pages',
+            },
+            products: {
+                enabled: true,
+                description: 'The Website Products collection. where you can manage products and its variants'
+            },
+            variantOptions: {
+                enabled: true,
+                description: 'The Website products variants options managements system where you can manage variants options.'
+            },
+            variantTypes: {
+                enabled: true,
+                description: 'The Website products variants types collection where you can manage variants are which type?'
+            },
+            variants: {
+                enabled: true,
+                description: 'The Website Products Variants collection where you can manage products variants and this variants collection will depends on variantsTypes and variantsOptions collection.'
+            }
         }
     })
 ]
